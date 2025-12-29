@@ -1,0 +1,142 @@
+.hint-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.hint-section {
+  flex: 1;
+  min-width: 0;
+}
+
+.hint-section h3 {
+  margin: 0 0 16px 0;
+  padding-bottom: 12px;
+  border-bottom: 3px solid #1a1a2e;
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+.hint-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.hint-section li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  margin-bottom: 6px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s;
+  border: 2px solid transparent;
+}
+
+.hint-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.hint-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.chosung-text {
+  font-size: 14px;
+  font-weight: 700;
+  color: #e65100;
+  background-color: #fff3e0;
+  padding: 4px 8px;
+  border-radius: 4px;
+  letter-spacing: 2px;
+}
+
+.chosung-btn {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  background-color: #f5f5f5;
+  color: #666;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.chosung-btn:hover {
+  background-color: #fff3e0;
+  border-color: #ffb74d;
+  color: #e65100;
+}
+
+.chosung-btn.active {
+  background-color: #e65100;
+  border-color: #e65100;
+  color: white;
+}
+
+.hint-section li:hover {
+  background-color: #f0f4f8;
+  border-color: #e0e0e0;
+}
+
+.hint-section li.selected {
+  background-color: #e3f2fd;
+  border-color: #4a9eff;
+}
+
+.hint-number {
+  font-weight: 700;
+  margin-right: 10px;
+  color: #4a9eff;
+  font-size: 15px;
+}
+
+.hint-text {
+  color: #333;
+  line-height: 1.5;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* 스크롤바 스타일 */
+.hint-section ul::-webkit-scrollbar {
+  width: 6px;
+}
+
+.hint-section ul::-webkit-scrollbar-track {
+  background: #f0f0f0;
+  border-radius: 3px;
+}
+
+.hint-section ul::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+
+.hint-section ul::-webkit-scrollbar-thumb:hover {
+  background: #aaa;
+}
+
+/* 반응형: 세로 배치 시 힌트 높이 늘림 */
+@media (max-width: 900px) {
+  .hint-section ul {
+    max-height: 300px;
+  }
+}

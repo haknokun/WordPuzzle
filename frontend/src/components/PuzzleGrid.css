@@ -1,0 +1,118 @@
+.puzzle-grid {
+  display: grid;
+  gap: 1px;
+  background-color: #1a1a2e;
+  padding: 4px;
+  width: fit-content;
+  margin: 0 auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.puzzle-cell {
+  width: 42px;
+  height: 42px;
+  background-color: #1a1a2e;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 2px;
+}
+
+/* 빈 칸 (배경색) - 클릭/입력 불가 */
+.puzzle-cell.blank {
+  background-color: #1a1a2e;
+  pointer-events: none;
+}
+
+/* 단어 칸 (기본) */
+.puzzle-cell.active {
+  background-color: #f8f9fa;
+  cursor: pointer;
+}
+
+/* 선택한 단어 전체 (하이라이트) */
+.puzzle-cell.active.highlighted {
+  background-color: #a8d5ff;
+}
+
+/* 현재 선택된 칸 */
+.puzzle-cell.active.selected {
+  background-color: #4a9eff;
+}
+
+/* 정답 */
+.puzzle-cell.correct input {
+  color: #2e7d32;
+}
+
+/* 오답 */
+.puzzle-cell.incorrect input {
+  color: #c62828;
+}
+
+/* 단어 번호 공통 */
+.word-number {
+  position: absolute;
+  font-size: 8px;
+  font-weight: 700;
+  line-height: 1;
+  padding: 2px 3px;
+  border-radius: 2px;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.word-number:hover {
+  transform: scale(1.2);
+}
+
+/* 가로 번호 - 좌상단 */
+.across-number {
+  top: 2px;
+  left: 2px;
+  color: #1565c0;
+  background-color: rgba(21, 101, 192, 0.1);
+}
+
+/* 세로 번호 - 우상단 */
+.down-number {
+  top: 2px;
+  right: 2px;
+  color: #c62828;
+  background-color: rgba(198, 40, 40, 0.1);
+}
+
+.puzzle-cell.active.highlighted .word-number,
+.puzzle-cell.active.selected .word-number {
+  color: #1a1a2e;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* 입력 필드 */
+.puzzle-cell input {
+  width: 100%;
+  height: 100%;
+  border: none;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 700;
+  background: transparent;
+  outline: none;
+  color: #1a1a2e;
+  caret-color: #4a9eff;
+}
+
+.puzzle-cell.active.selected input {
+  color: #fff;
+}
+
+.puzzle-cell input:focus {
+  outline: none;
+}
+
+/* 빈 칸은 입력 불가 */
+.puzzle-cell.blank input {
+  display: none;
+}
