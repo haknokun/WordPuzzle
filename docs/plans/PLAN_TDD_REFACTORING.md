@@ -357,12 +357,12 @@ npx playwright test --list
 
 ### Phase 4: Frontend 유틸리티 함수 테스트
 **Goal**: Frontend 순수 함수 추출 및 테스트
-**Status**: Pending
+**Status**: Complete
 
 #### Tasks
 
 **RED: Write Failing Tests First**
-- [ ] **Test 4.1**: chosung 유틸리티 테스트
+- [x] **Test 4.1**: chosung 유틸리티 테스트
   - File: `frontend/src/__tests__/utils/chosung.test.ts`
   - Expected: 테스트 실패 (함수 미추출 상태)
   - Test Cases:
@@ -370,57 +370,60 @@ npx playwright test --list
     - `getChosung("가나다")` -> "ㄱㄴㄷ"
     - `getChosung("abc")` -> "abc" (한글 아닌 경우)
     - `getChosung("한1글")` -> "ㅎ1ㄱ" (혼합)
+    - `isKoreanSyllable()` 헬퍼 함수 테스트
+    - `CHOSUNG_LIST` 상수 테스트
 
-- [ ] **Test 4.2**: puzzleUtils 테스트
+- [x] **Test 4.2**: puzzleUtils 테스트
   - File: `frontend/src/__tests__/utils/puzzleUtils.test.ts`
   - Expected: 테스트 실패 (함수 미추출 상태)
   - Test Cases:
-    - `isCellInWord(cell, word)` - 셀이 단어에 속하는지
-    - `checkCompletion(grid, userInputs)` - 완료 체크
-    - `findWordAtCell(row, col, words)` - 셀 위치의 단어 찾기
+    - `isCellInSelectedWord(row, col, word)` - 셀이 단어에 속하는지
+    - `checkPuzzleCompletion(userInputs, grid)` - 완료 체크
+    - `findWordAtCell(row, col, acrossWords, downWords)` - 셀 위치의 단어 찾기
+    - `checkCellCorrect(userInput, answer)` - 셀 정답 여부
 
 **GREEN: Implement to Make Tests Pass**
-- [ ] **Task 4.3**: chosung.ts 유틸리티 추출
+- [x] **Task 4.3**: chosung.ts 유틸리티 추출
   - File: `frontend/src/utils/chosung.ts`
-  - Goal: Test 4.1 통과
-  - Details: HintPanel.tsx에서 getChosung 함수 분리
+  - Goal: Test 4.1 통과 (12개 테스트)
+  - Details: HintPanel.tsx에서 getChosung 함수 분리, isKoreanSyllable 헬퍼 추가
 
-- [ ] **Task 4.4**: puzzleUtils.ts 유틸리티 추출
+- [x] **Task 4.4**: puzzleUtils.ts 유틸리티 추출
   - File: `frontend/src/utils/puzzleUtils.ts`
-  - Goal: Test 4.2 통과
+  - Goal: Test 4.2 통과 (21개 테스트)
   - Details:
     - PuzzleGrid.tsx에서 순수 함수 추출
-    - `isCellInWord`, `checkCompletion`, `findWordAtCell`
+    - `findWordAtCell`, `isCellInSelectedWord`, `checkCellCorrect`, `checkPuzzleCompletion`
 
-- [ ] **Task 4.5**: 컴포넌트에서 유틸리티 사용
+- [x] **Task 4.5**: 컴포넌트에서 유틸리티 사용
   - Files: `HintPanel.tsx`, `PuzzleGrid.tsx`
   - Goal: 추출된 유틸리티 import하여 사용
-  - Details: 기존 동작 유지 확인
+  - Details: 기존 동작 유지 확인, useCallback으로 최적화
 
 **REFACTOR: Clean Up Code**
-- [ ] **Task 4.6**: 유틸리티 타입 정의 개선
+- [x] **Task 4.6**: 유틸리티 타입 정의 개선
   - Files: `types/puzzle.ts`, 유틸리티 파일들
   - Checklist:
-    - [ ] 함수 시그니처 명확화
-    - [ ] JSDoc 추가
+    - [x] 함수 시그니처 명확화 (null 처리)
+    - [x] JSDoc 추가
 
 #### Quality Gate
 
 **TDD Compliance**:
-- [ ] 유틸리티 함수 커버리지 100%
-- [ ] 모든 테스트 통과
+- [x] 유틸리티 함수 커버리지 100%
+- [x] 모든 테스트 통과 (37개)
 
 **Validation Commands**:
 ```bash
 cd frontend
-npm test -- --coverage
-npm run lint
-npm run build
+npm run test:run   # 37 tests passed
+npm run lint       # No errors
+npm run build      # Success
 ```
 
 **Manual Test Checklist**:
-- [ ] 초성 힌트 정상 동작
-- [ ] 퍼즐 완료 감지 정상 동작
+- [x] 초성 힌트 정상 동작
+- [x] 퍼즐 완료 감지 정상 동작
 
 ---
 
@@ -598,11 +601,11 @@ npx playwright show-report
 - **Phase 1**: Complete (100%)
 - **Phase 2**: Complete (100%)
 - **Phase 3**: Complete (100%)
-- **Phase 4**: Pending (0%)
+- **Phase 4**: Complete (100%)
 - **Phase 5**: Pending (0%)
 - **Phase 6**: Pending (0%)
 
-**Overall Progress**: 50% complete (3/6 phases)
+**Overall Progress**: 67% complete (4/6 phases)
 
 ---
 
@@ -619,6 +622,11 @@ npx playwright show-report
 - Phase 3: @WebMvcTest → org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest
 - Phase 3: @DataJpaTest → org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest
 - Phase 3: H2에서 MySQL RAND() 함수 미지원으로 일부 쿼리 테스트 제한
+- Phase 4: TDD Red-Green-Refactor 사이클 성공적으로 적용 (Frontend)
+- Phase 4: chosung.ts (초성 추출), puzzleUtils.ts (퍼즐 로직) 2개 유틸리티 모듈 추출
+- Phase 4: PuzzleGrid.tsx ~360줄 -> 순수 함수 분리로 테스트 가능한 구조 개선
+- Phase 4: useCallback으로 isCorrect, checkCellHighlighted 함수 최적화
+- Phase 4: TypeScript 타입 시스템 활용하여 null 안전성 강화
 
 ### Blockers Encountered
 - Phase 1: PuzzleGrid.tsx에서 렌더링 중 ref 접근 -> userInputs 상태만 사용하도록 수정
@@ -626,6 +634,7 @@ npx playwright show-report
 - Phase 2: AssertJ hasSize()가 char[][]에 동작 안함 -> .length 사용으로 해결
 - Phase 3: H2/MySQL RAND() 호환성 문제 -> RAND() 사용 쿼리 테스트 제외, 기본 쿼리만 테스트
 - Phase 3: Controller 통합 테스트 -> @WebMvcTest + MockitoBean으로 서비스 모킹 방식 채택
+- Phase 4: PuzzleCell.letter 타입이 string | null로 정의됨 -> checkCellCorrect에서 null 처리 추가
 
 ### Improvements for Future Plans
 - [To be filled after completion]
@@ -660,5 +669,5 @@ npx playwright show-report
 ---
 
 **Plan Status**: In Progress
-**Next Action**: Phase 4 - Frontend 유틸리티 함수 테스트
+**Next Action**: Phase 5 - Frontend 커스텀 훅 및 컴포넌트 테스트
 **Blocked By**: None

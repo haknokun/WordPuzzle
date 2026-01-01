@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { PuzzleWord } from '../types/puzzle';
+import { getChosung } from '../utils/chosung';
 import './HintPanel.css';
 
 interface Props {
@@ -7,21 +8,6 @@ interface Props {
   downWords: PuzzleWord[];
   selectedWord: PuzzleWord | null;
   onWordClick: (word: PuzzleWord) => void;
-}
-
-// 한글 초성 추출 함수
-const CHOSUNG = ['ㄱ', 'ㄲ', 'ㄴ', 'ㄷ', 'ㄸ', 'ㄹ', 'ㅁ', 'ㅂ', 'ㅃ', 'ㅅ', 'ㅆ', 'ㅇ', 'ㅈ', 'ㅉ', 'ㅊ', 'ㅋ', 'ㅌ', 'ㅍ', 'ㅎ'];
-
-function getChosung(word: string): string {
-  return word.split('').map(char => {
-    const code = char.charCodeAt(0);
-    // 한글 범위: 0xAC00 ~ 0xD7A3
-    if (code >= 0xAC00 && code <= 0xD7A3) {
-      const chosungIndex = Math.floor((code - 0xAC00) / 588);
-      return CHOSUNG[chosungIndex];
-    }
-    return char; // 한글이 아니면 그대로 반환
-  }).join('');
 }
 
 export default function HintPanel({ acrossWords, downWords, selectedWord, onWordClick }: Props) {
