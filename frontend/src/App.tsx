@@ -11,19 +11,19 @@ function App() {
   const [error, setError] = useState<string | null>(null);
   const [selectedWord, setSelectedWord] = useState<PuzzleWord | null>(null);
   const [completed, setCompleted] = useState(false);
-  const [gridSize, setGridSize] = useState(15);
   const [wordCount, setWordCount] = useState(10);
+  const [level, setLevel] = useState<string>('');
 
   const handleGenerate = async () => {
     setLoading(true);
     setError(null);
     setCompleted(false);
     try {
-      const data = await generatePuzzle(gridSize, wordCount);
+      const data = await generatePuzzle(wordCount, level || undefined);
       console.log('API Response:', data);
       console.log('Grid:', data.grid);
       setPuzzle(data);
-    } catch (err) {
+    } catch {
       setError('퍼즐 생성에 실패했습니다. 서버가 실행 중인지 확인해주세요.');
     } finally {
       setLoading(false);
@@ -47,16 +47,6 @@ function App() {
 
       <div className="controls">
         <label>
-          그리드 크기:
-          <input
-            type="number"
-            value={gridSize}
-            onChange={(e) => setGridSize(Number(e.target.value))}
-            min={5}
-            max={30}
-          />
-        </label>
-        <label>
           단어 수:
           <input
             type="number"
@@ -65,6 +55,15 @@ function App() {
             min={3}
             max={50}
           />
+        </label>
+        <label>
+          난이도:
+          <select value={level} onChange={(e) => setLevel(e.target.value)}>
+            <option value="">전체</option>
+            <option value="초급">초급</option>
+            <option value="중급">중급</option>
+            <option value="고급">고급</option>
+          </select>
         </label>
         <button onClick={handleGenerate} disabled={loading}>
           {loading ? '생성 중...' : '새 퍼즐 생성'}

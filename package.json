@@ -1,0 +1,28 @@
+{
+  "name": "wordpuzzle",
+  "version": "1.0.0",
+  "description": "한국어 십자말풀이 웹 애플리케이션입니다. 단어들이 교차하는 퍼즐을 자동 생성하고, 인터랙티브한 UI로 풀 수 있습니다.",
+  "main": "index.js",
+  "scripts": {
+    "test:backend": "cd . && .\\gradlew test",
+    "test:frontend": "cd frontend && npm run test:run",
+    "test:e2e": "npx playwright test",
+    "test:e2e:list": "npx playwright test --list",
+    "test:all": "npm run test:backend && npm run test:frontend"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/haknokun/WordPuzzle.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/haknokun/WordPuzzle/issues"
+  },
+  "homepage": "https://github.com/haknokun/WordPuzzle#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.57.0",
+    "@types/node": "^25.0.3"
+  }
+}
