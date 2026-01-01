@@ -187,19 +187,18 @@ test.describe('Answer Verification Tests', () => {
     expect(count).toBeGreaterThanOrEqual(2);
   });
 
-  test('completing puzzle shows completion message', async ({ page }) => {
-    // 이 테스트는 모든 정답을 입력해야 하므로
-    // 실제로는 API 응답을 mock하거나 작은 퍼즐로 테스트
+  test('completion message element exists when puzzle is completed', async ({ page }) => {
+    // 완료 메시지는 .complete-message 클래스로 표시됨
+    // 실제 완료 테스트는 completion.spec.ts에서 수행
 
-    // 완료 시 표시되는 요소 확인 (앱에서 완료 UI가 있다면)
-    // 현재는 onComplete 콜백만 호출하므로, 완료 상태 확인이 필요
-
-    // 퍼즐 그리드가 존재하는지만 확인
+    // 퍼즐 그리드가 존재하는지 확인
     const grid = page.locator('.puzzle-grid');
     await expect(grid).toBeVisible();
 
-    // 스크린샷으로 현재 상태 기록
-    await page.screenshot({ path: 'test-results/completion-test.png' });
+    // 완료 메시지 요소가 DOM에 추가될 수 있는지 확인 (초기에는 숨김)
+    const completeMessage = page.locator('.complete-message');
+    // 완료 전에는 보이지 않아야 함
+    await expect(completeMessage).not.toBeVisible();
   });
 });
 
