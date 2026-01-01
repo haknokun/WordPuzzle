@@ -1,11 +1,11 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import type { PuzzleCell, PuzzleWord } from '../types/puzzle';
 import {
-  findWordAtCell,
   isCellInSelectedWord,
   checkCellCorrect,
   checkPuzzleCompletion
 } from '../utils/puzzleUtils';
+import { usePuzzleNavigation } from '../hooks/usePuzzleNavigation';
 import './PuzzleGrid.css';
 
 interface Props {
@@ -21,31 +21,33 @@ export default function PuzzleGrid({ grid, gridSize, acrossWords, downWords, onC
   const [userInputs, setUserInputs] = useState<string[][]>(() =>
     Array(gridSize).fill(null).map(() => Array(gridSize).fill(''))
   );
-  const [selectedCell, setSelectedCell] = useState<{ row: number; col: number } | null>(null);
-  const [selectedWord, setSelectedWord] = useState<PuzzleWord | null>(null);
   const inputRefs = useRef<(HTMLInputElement | null)[][]>(
     Array(gridSize).fill(null).map(() => Array(gridSize).fill(null))
   );
-  const isComposing = useRef(false); // 한글 조합 중인지 추적
+  const isComposing = useRef(false);
 
-  const handleCellClick = (row: number, col: number) => {
-    if (grid[row][col].isBlank) return;
+  // 네비게이션 훅 사용
+  const {
+    selectedCell,
+    selectedWord,
+    handleCellClick: navHandleCellClick,
+    handleArrowKey,
+    moveToNextCell,
+    moveToPrevCell,
+    selectWordFromHint,
+    setSelectedCell,
+    setSelectedWord
+  } = usePuzzleNavigation({ grid, gridSize, acrossWords, downWords });
 
-    // 같은 셀을 다시 클릭했는지 확인
-    const isSameCell = selectedCell?.row === row && selectedCell?.col === col;
-
-    setSelectedCell({ row, col });
+  // 셀 클릭 시 포커스 처리 추가
+  const handleCellClick = useCallback((row: number, col: number) => {
+    navHandleCellClick(row, col);
     inputRefs.current[row][col]?.focus();
-
-    // 해당 셀이 속한 단어 찾기 (같은 셀이면 방향 전환)
-    const word = findWordAtCell(row, col, acrossWords, downWords, isSameCell ? selectedWord?.direction : undefined);
-    setSelectedWord(word);
-  };
+  }, [navHandleCellClick]);
 
   const handleNumberClick = (e: React.MouseEvent, row: number, col: number, direction: 'ACROSS' | 'DOWN') => {
-    e.stopPropagation(); // 셀 클릭 이벤트 전파 방지
+    e.stopPropagation();
 
-    // 해당 방향의 단어 찾기
     const words = direction === 'ACROSS' ? acrossWords : downWords;
     const word = words.find(w => w.startRow === row && w.startCol === col);
 
@@ -56,13 +58,13 @@ export default function PuzzleGrid({ grid, gridSize, acrossWords, downWords, onC
     }
   };
 
-  const updateUserInput = (row: number, col: number, value: string) => {
+  const updateUserInput = useCallback((row: number, col: number, value: string) => {
     setUserInputs(prev => {
       const newInputs = prev.map(r => [...r]); // 깊은 복사
       newInputs[row][col] = value;
       return newInputs;
     });
-  };
+  }, []);
 
   const handleInput = (row: number, col: number, e: React.ChangeEvent<HTMLInputElement>) => {
     if (grid[row][col].isBlank) return;
@@ -94,7 +96,7 @@ export default function PuzzleGrid({ grid, gridSize, acrossWords, downWords, onC
     }
   };
 
-  const getNextCell = (row: number, col: number): { row: number; col: number } | null => {
+  const getNextCell = useCallback((row: number, col: number): { row: number; col: number } | null => {
     if (!selectedWord) return null;
 
     let nextRow = row;
@@ -116,7 +118,7 @@ export default function PuzzleGrid({ grid, gridSize, acrossWords, downWords, onC
       return { row: nextRow, col: nextCol };
     }
     return null;
-  };
+  }, [selectedWord, gridSize, grid]);
 
   const handleCompositionStart = () => {
     isComposing.current = true;
@@ -134,80 +136,34 @@ export default function PuzzleGrid({ grid, gridSize, acrossWords, downWords, onC
     }
   };
 
-  const moveToNextCell = (row: number, col: number) => {
-    if (!selectedWord) return;
+  // moveToNextCell - 훅의 함수를 사용하고 포커스 추가
+  const handleMoveToNextCell = useCallback(() => {
+    moveToNextCell();
+    // 훅이 selectedCell을 업데이트하면 useEffect에서 포커스 처리
+  }, [moveToNextCell]);
 
-    let nextRow = row;
-    let nextCol = col;
-
-    if (selectedWord.direction === 'ACROSS') {
-      nextCol = col + 1;
-      // 단어 범위 체크
-      if (nextCol >= selectedWord.startCol + selectedWord.word.length) {
-        return; // 단어 끝에 도달하면 이동하지 않음
-      }
-    } else {
-      nextRow = row + 1;
-      // 단어 범위 체크
-      if (nextRow >= selectedWord.startRow + selectedWord.word.length) {
-        return; // 단어 끝에 도달하면 이동하지 않음
-      }
-    }
-
-    if (nextRow < gridSize && nextCol < gridSize && !grid[nextRow][nextCol].isBlank) {
-      setSelectedCell({ row: nextRow, col: nextCol });
-      inputRefs.current[nextRow][nextCol]?.focus();
-    }
-  };
-
-  const moveCellWithDirection = (newRow: number, newCol: number) => {
-    // 현재 단어 방향을 유지하면서 셀 이동
-    setSelectedCell({ row: newRow, col: newCol });
-    inputRefs.current[newRow][newCol]?.focus();
-    // selectedWord는 유지 (방향 전환 없음)
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent, row: number, col: number) => {
+  const handleKeyDown = useCallback((e: React.KeyboardEvent, row: number, col: number) => {
     if (e.key === ' ') {
       // 스페이스바: 다음 칸으로 이동
       e.preventDefault();
-      moveToNextCell(row, col);
+      handleMoveToNextCell();
     } else if (e.key === 'Backspace') {
       const currentInput = inputRefs.current[row][col];
       const currentValue = currentInput?.value || '';
 
       if (!currentValue) {
         // 현재 칸이 비어있으면 이전 칸으로 이동
-        if (selectedWord) {
-          let prevRow = row;
-          let prevCol = col;
-
-          if (selectedWord.direction === 'ACROSS') {
-            prevCol = col - 1;
-          } else {
-            prevRow = row - 1;
-          }
-
-          if (prevRow >= 0 && prevCol >= 0 && !grid[prevRow][prevCol].isBlank) {
-            moveCellWithDirection(prevRow, prevCol);
-          }
-        }
+        moveToPrevCell();
       } else {
         // 현재 칸 내용 삭제 후 상태 업데이트
         setTimeout(() => {
           updateUserInput(row, col, currentInput?.value || '');
         }, 0);
       }
-    } else if (e.key === 'ArrowUp' && row > 0 && !grid[row - 1][col].isBlank) {
-      moveCellWithDirection(row - 1, col);
-    } else if (e.key === 'ArrowDown' && row < gridSize - 1 && !grid[row + 1][col].isBlank) {
-      moveCellWithDirection(row + 1, col);
-    } else if (e.key === 'ArrowLeft' && col > 0 && !grid[row][col - 1].isBlank) {
-      moveCellWithDirection(row, col - 1);
-    } else if (e.key === 'ArrowRight' && col < gridSize - 1 && !grid[row][col + 1].isBlank) {
-      moveCellWithDirection(row, col + 1);
+    } else if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+      handleArrowKey(e.key);
     }
-  };
+  }, [handleMoveToNextCell, moveToPrevCell, handleArrowKey, updateUserInput]);
 
   const isCorrect = useCallback((row: number, col: number): boolean | null => {
     return checkCellCorrect(userInputs[row][col], grid[row][col].letter);
@@ -218,17 +174,19 @@ export default function PuzzleGrid({ grid, gridSize, acrossWords, downWords, onC
   }, [selectedWord]);
 
   // 힌트 클릭 시 해당 단어의 첫 셀 선택
-  // Note: This effect synchronizes external prop to local state - will be refactored in Phase 5
   useEffect(() => {
     if (selectedWordFromHint) {
-      const { startRow, startCol } = selectedWordFromHint;
-      /* eslint-disable react-hooks/set-state-in-effect -- intentional prop-to-state sync, refactor in Phase 5 */
-      setSelectedCell({ row: startRow, col: startCol });
-      setSelectedWord(selectedWordFromHint);
-      /* eslint-enable react-hooks/set-state-in-effect */
-      inputRefs.current[startRow][startCol]?.focus();
+      selectWordFromHint(selectedWordFromHint);
+      inputRefs.current[selectedWordFromHint.startRow][selectedWordFromHint.startCol]?.focus();
     }
-  }, [selectedWordFromHint]);
+  }, [selectedWordFromHint, selectWordFromHint]);
+
+  // 선택된 셀 변경 시 포커스 (훅에서 셀 변경 시)
+  useEffect(() => {
+    if (selectedCell) {
+      inputRefs.current[selectedCell.row][selectedCell.col]?.focus();
+    }
+  }, [selectedCell]);
 
   // 완료 체크
   useEffect(() => {
