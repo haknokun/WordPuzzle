@@ -5,6 +5,8 @@ import com.hakno.WordPuzzle.dto.PuzzleResponse;
 import com.hakno.WordPuzzle.dto.PuzzleWord;
 import com.hakno.WordPuzzle.entity.Word;
 import com.hakno.WordPuzzle.repository.WordRepository;
+import com.hakno.WordPuzzle.util.GridConverter;
+import com.hakno.WordPuzzle.util.GridUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
@@ -19,6 +21,9 @@ import java.util.*;
 public class PuzzleGeneratorService {
 
     private final WordRepository wordRepository;
+    private final PlacementValidator placementValidator;
+    private final GridConverter gridConverter;
+
     private static final int MAX_ATTEMPTS = 200;
     private static final int SEARCH_LIMIT = 100;
 
@@ -28,7 +33,7 @@ public class PuzzleGeneratorService {
 
     public PuzzleResponse generatePuzzle(Integer gridSize, int targetWordCount, String level) {
         // gridSize가 null이면 단어 수에 따라 자동 계산
-        int actualGridSize = (gridSize != null) ? gridSize : calculateGridSize(targetWordCount);
+        int actualGridSize = (gridSize != null) ? gridSize : GridUtils.calculateGridSize(targetWordCount);
 
         // 최대 3번 재시도
         for (int retry = 0; retry < 3; retry++) {
@@ -42,22 +47,8 @@ public class PuzzleGeneratorService {
         return tryGeneratePuzzle(actualGridSize, targetWordCount, level);
     }
 
-    /**
-     * 단어 수에 따라 적절한 그리드 크기를 계산
-     * - 단어가 많을수록 더 큰 그리드 필요
-     * - 최소 10, 최대 25
-     */
-    private int calculateGridSize(int wordCount) {
-        // 기본 공식: 8 + (단어수 * 0.7)
-        int size = (int) Math.round(8 + wordCount * 0.7);
-        return Math.max(10, Math.min(25, size));
-    }
-
     private PuzzleResponse tryGeneratePuzzle(int gridSize, int targetWordCount, String level) {
-        char[][] grid = new char[gridSize][gridSize];
-        for (char[] row : grid) {
-            Arrays.fill(row, '\0');
-        }
+        char[][] grid = GridUtils.createEmptyGrid(gridSize);
 
         List<PuzzleWord> placedWords = new ArrayList<>();
         Set<String> usedWords = new HashSet<>();
@@ -108,7 +99,7 @@ public class PuzzleGeneratorService {
                     totalPlacementsChecked += placements.size();
 
                     for (PlacementResult placement : placements) {
-                        if (canPlaceWord(grid, word.getWord(), placement.row, placement.col, placement.direction, gridSize)) {
+                        if (placementValidator.canPlaceWord(grid, word.getWord(), placement.row, placement.col, placement.direction, gridSize)) {
                             placeWord(grid, word.getWord(), placement.row, placement.col, placement.direction);
                             placedWords.add(createPuzzleWord(word, 0, placement.row, placement.col, placement.direction));
                             usedWords.add(word.getWord());
@@ -117,7 +108,7 @@ public class PuzzleGeneratorService {
                             log.debug("단어 배치 성공: {} (총 {}개)", word.getWord(), placedWords.size());
                             break candidateLoop;
                         } else {
-                            String reason = whyCannotPlace(grid, word.getWord(), placement.row, placement.col, placement.direction, gridSize);
+                            String reason = placementValidator.whyCannotPlace(grid, word.getWord(), placement.row, placement.col, placement.direction, gridSize);
                             failureReasons.merge(reason, 1, Integer::sum);
                         }
                     }
@@ -188,7 +179,7 @@ public class PuzzleGeneratorService {
         }
 
         // 그리드를 PuzzleCell로 변환
-        List<List<PuzzleCell>> cellGrid = convertToCellGrid(grid, numberedAcrossWords, numberedDownWords, gridSize);
+        List<List<PuzzleCell>> cellGrid = gridConverter.convertToCellGrid(grid, numberedAcrossWords, numberedDownWords, gridSize);
 
         return PuzzleResponse.builder()
                 .gridSize(gridSize)
@@ -198,9 +189,6 @@ public class PuzzleGeneratorService {
                 .totalWords(placedWords.size())
                 .build();
     }
-
-    // 자주 쓰이는 한글 글자들 (교차 가능성 높음)
-    private static final String COMMON_CHARS = "가나다라마바사아자하이의를을에서는로고기대";
 
     private Word findFirstWord(int gridSize, String level) {
         int maxLength = Math.min(gridSize - 2, 6);
@@ -213,24 +201,14 @@ public class PuzzleGeneratorService {
 
         // 공통 글자를 많이 포함한 단어 우선 선택
         words.sort((a, b) -> {
-            int scoreA = countCommonChars(a.getWord());
-            int scoreB = countCommonChars(b.getWord());
+            int scoreA = GridUtils.countCommonChars(a.getWord());
+            int scoreB = GridUtils.countCommonChars(b.getWord());
             return scoreB - scoreA; // 내림차순
         });
 
         // 상위 10개 중 랜덤 선택 (다양성 유지)
         int selectFrom = Math.min(10, words.size());
         return words.get(new Random().nextInt(selectFrom));
-    }
-
-    private int countCommonChars(String word) {
-        int count = 0;
-        for (char c : word.toCharArray()) {
-            if (COMMON_CHARS.indexOf(c) >= 0) {
-                count++;
-            }
-        }
-        return count;
     }
 
     private List<IntersectionCandidate> findIntersectionCandidates(char[][] grid, int gridSize) {
@@ -314,123 +292,6 @@ public class PuzzleGeneratorService {
         return placements;
     }
 
-    private boolean canPlaceWord(char[][] grid, String word, int startRow, int startCol, PuzzleWord.Direction direction, int gridSize) {
-        int len = word.length();
-
-        if (direction == PuzzleWord.Direction.ACROSS) {
-            // 범위 체크
-            if (startCol < 0 || startCol + len > gridSize) return false;
-            // 단어 앞뒤에 빈 칸 확보
-            if (startCol > 0 && grid[startRow][startCol - 1] != '\0') return false;
-            if (startCol + len < gridSize && grid[startRow][startCol + len] != '\0') return false;
-
-            boolean hasIntersection = false;
-            for (int i = 0; i < len; i++) {
-                int col = startCol + i;
-                char existing = grid[startRow][col];
-                char newChar = word.charAt(i);
-
-                if (existing != '\0') {
-                    // 교차점: 같은 글자여야 함
-                    if (existing != newChar) return false;
-                    hasIntersection = true;
-                } else {
-                    // 빈 셀: 교차점이 아니면 위/아래에 글자가 있으면 안됨 (단어 분리)
-                    boolean hasAbove = startRow > 0 && grid[startRow - 1][col] != '\0';
-                    boolean hasBelow = startRow < gridSize - 1 && grid[startRow + 1][col] != '\0';
-
-                    if (hasAbove || hasBelow) {
-                        return false;
-                    }
-                }
-            }
-            return hasIntersection;
-
-        } else {
-            // 범위 체크
-            if (startRow < 0 || startRow + len > gridSize) return false;
-            // 단어 앞뒤에 빈 칸 확보
-            if (startRow > 0 && grid[startRow - 1][startCol] != '\0') return false;
-            if (startRow + len < gridSize && grid[startRow + len][startCol] != '\0') return false;
-
-            boolean hasIntersection = false;
-            for (int i = 0; i < len; i++) {
-                int row = startRow + i;
-                char existing = grid[row][startCol];
-                char newChar = word.charAt(i);
-
-                if (existing != '\0') {
-                    // 교차점: 같은 글자여야 함
-                    if (existing != newChar) return false;
-                    hasIntersection = true;
-                } else {
-                    // 빈 셀: 교차점이 아니면 좌/우에 글자가 있으면 안됨 (단어 분리)
-                    boolean hasLeft = startCol > 0 && grid[row][startCol - 1] != '\0';
-                    boolean hasRight = startCol < gridSize - 1 && grid[row][startCol + 1] != '\0';
-
-                    if (hasLeft || hasRight) {
-                        return false;
-                    }
-                }
-            }
-            return hasIntersection;
-        }
-    }
-
-    // 디버깅용: 왜 배치가 안되는지 상세 이유 반환
-    private String whyCannotPlace(char[][] grid, String word, int startRow, int startCol, PuzzleWord.Direction direction, int gridSize) {
-        int len = word.length();
-
-        if (direction == PuzzleWord.Direction.ACROSS) {
-            if (startCol < 0) return "시작열 음수";
-            if (startCol + len > gridSize) return "범위초과(열)";
-            if (startCol > 0 && grid[startRow][startCol - 1] != '\0') return "앞에 글자있음";
-            if (startCol + len < gridSize && grid[startRow][startCol + len] != '\0') return "뒤에 글자있음";
-
-            boolean hasIntersection = false;
-            for (int i = 0; i < len; i++) {
-                int col = startCol + i;
-                char existing = grid[startRow][col];
-                char newChar = word.charAt(i);
-
-                if (existing != '\0') {
-                    if (existing != newChar) return "교차점 글자불일치: " + existing + "!=" + newChar;
-                    hasIntersection = true;
-                } else {
-                    boolean hasAbove = startRow > 0 && grid[startRow - 1][col] != '\0';
-                    boolean hasBelow = startRow < gridSize - 1 && grid[startRow + 1][col] != '\0';
-                    if (hasAbove) return "위에 인접글자";
-                    if (hasBelow) return "아래에 인접글자";
-                }
-            }
-            if (!hasIntersection) return "교차점 없음";
-        } else {
-            if (startRow < 0) return "시작행 음수";
-            if (startRow + len > gridSize) return "범위초과(행)";
-            if (startRow > 0 && grid[startRow - 1][startCol] != '\0') return "앞에 글자있음";
-            if (startRow + len < gridSize && grid[startRow + len][startCol] != '\0') return "뒤에 글자있음";
-
-            boolean hasIntersection = false;
-            for (int i = 0; i < len; i++) {
-                int row = startRow + i;
-                char existing = grid[row][startCol];
-                char newChar = word.charAt(i);
-
-                if (existing != '\0') {
-                    if (existing != newChar) return "교차점 글자불일치: " + existing + "!=" + newChar;
-                    hasIntersection = true;
-                } else {
-                    boolean hasLeft = startCol > 0 && grid[row][startCol - 1] != '\0';
-                    boolean hasRight = startCol < gridSize - 1 && grid[row][startCol + 1] != '\0';
-                    if (hasLeft) return "좌측에 인접글자";
-                    if (hasRight) return "우측에 인접글자";
-                }
-            }
-            if (!hasIntersection) return "교차점 없음";
-        }
-        return "OK";
-    }
-
     private boolean isPartOfVerticalWord(char[][] grid, int row, int col) {
         return (row > 0 && grid[row - 1][col] != '\0') || (row < grid.length - 1 && grid[row + 1][col] != '\0');
     }
@@ -459,39 +320,6 @@ public class PuzzleGeneratorService {
                 .startCol(startCol)
                 .direction(direction)
                 .build();
-    }
-
-    private List<List<PuzzleCell>> convertToCellGrid(char[][] grid, List<PuzzleWord> acrossWords, List<PuzzleWord> downWords, int gridSize) {
-        Map<String, Integer> acrossNumbers = new HashMap<>();
-        for (PuzzleWord word : acrossWords) {
-            String key = word.getStartRow() + "," + word.getStartCol();
-            acrossNumbers.put(key, word.getNumber());
-        }
-
-        Map<String, Integer> downNumbers = new HashMap<>();
-        for (PuzzleWord word : downWords) {
-            String key = word.getStartRow() + "," + word.getStartCol();
-            downNumbers.put(key, word.getNumber());
-        }
-
-        List<List<PuzzleCell>> cellGrid = new ArrayList<>();
-        for (int row = 0; row < gridSize; row++) {
-            List<PuzzleCell> rowCells = new ArrayList<>();
-            for (int col = 0; col < gridSize; col++) {
-                String key = row + "," + col;
-                char c = grid[row][col];
-                rowCells.add(PuzzleCell.builder()
-                        .row(row)
-                        .col(col)
-                        .letter(c == '\0' ? null : String.valueOf(c))
-                        .isBlank(c == '\0')
-                        .acrossNumber(acrossNumbers.get(key))
-                        .downNumber(downNumbers.get(key))
-                        .build());
-            }
-            cellGrid.add(rowCells);
-        }
-        return cellGrid;
     }
 
     private static class IntersectionCandidate {
