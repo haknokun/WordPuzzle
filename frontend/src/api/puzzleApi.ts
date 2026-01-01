@@ -3,12 +3,14 @@ import type { PuzzleResponse } from '../types/puzzle';
 const API_BASE = 'http://localhost:8080/api';
 
 export const generatePuzzle = async (
-  gridSize: number = 15,
-  wordCount: number = 10
+  wordCount: number = 10,
+  level?: string
 ): Promise<PuzzleResponse> => {
-  const response = await fetch(
-    `${API_BASE}/puzzle/generate?gridSize=${gridSize}&wordCount=${wordCount}`
-  );
+  let url = `${API_BASE}/puzzle/generate?wordCount=${wordCount}`;
+  if (level) {
+    url += `&level=${encodeURIComponent(level)}`;
+  }
+  const response = await fetch(url);
   if (!response.ok) {
     throw new Error('퍼즐 생성 실패');
   }

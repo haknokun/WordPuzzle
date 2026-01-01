@@ -93,8 +93,23 @@ public class DataImportService {
             return null;
         }
 
+        // 품사 및 난이도 추출
+        JsonNode entryFeat = entry.path("feat");
+        String partOfSpeech = extractValue(entryFeat, "partOfSpeech");
+        String vocabularyLevel = extractValue(entryFeat, "vocabularyLevel");
+
+        // "없음" 또는 "품사 없음" 처리
+        if ("없음".equals(vocabularyLevel)) {
+            vocabularyLevel = null;
+        }
+        if ("품사 없음".equals(partOfSpeech)) {
+            partOfSpeech = null;
+        }
+
         Word word = Word.builder()
                 .word(wordText)
+                .partOfSpeech(partOfSpeech)
+                .vocabularyLevel(vocabularyLevel)
                 .build();
 
         // 뜻풀이 추출

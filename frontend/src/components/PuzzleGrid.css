@@ -1,28 +1,28 @@
 .puzzle-grid {
   display: grid;
   gap: 1px;
-  background-color: #1a1a2e;
-  padding: 4px;
   width: fit-content;
   margin: 0 auto;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  background-color: #ccc;
+  padding: 1px;
 }
 
 .puzzle-cell {
-  width: 42px;
-  height: 42px;
-  background-color: #1a1a2e;
+  width: 40px;
+  height: 40px;
+  background-color: #ffffff;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 2px;
+  box-sizing: border-box;
 }
 
 /* 빈 칸 (배경색) - 클릭/입력 불가 */
 .puzzle-cell.blank {
-  background-color: #1a1a2e;
+  background-color: #e0e0e0;
   pointer-events: none;
 }
 
@@ -30,6 +30,8 @@
 .puzzle-cell.active {
   background-color: #f8f9fa;
   cursor: pointer;
+  outline: 2px solid #64b5f6;
+  outline-offset: -2px;
 }
 
 /* 선택한 단어 전체 (하이라이트) */

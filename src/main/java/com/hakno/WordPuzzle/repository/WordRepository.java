@@ -68,4 +68,30 @@ public interface WordRepository extends JpaRepository<Word, Long> {
         @Param("maxLength") Integer maxLength,
         Pageable pageable
     );
+
+    // 난이도별 랜덤 단어 검색
+    @Query("SELECT DISTINCT w FROM Word w LEFT JOIN FETCH w.definitions " +
+           "WHERE w.length BETWEEN :minLength AND :maxLength " +
+           "AND (:level IS NULL OR w.vocabularyLevel = :level) " +
+           "ORDER BY FUNCTION('RAND')")
+    List<Word> findRandomWordsWithDefinitionsByLevel(
+        @Param("minLength") Integer minLength,
+        @Param("maxLength") Integer maxLength,
+        @Param("level") String level,
+        Pageable pageable
+    );
+
+    // 난이도별 특정 문자 포함 단어 검색
+    @Query("SELECT DISTINCT w FROM Word w LEFT JOIN FETCH w.definitions " +
+           "WHERE w.word LIKE %:character% " +
+           "AND w.length BETWEEN :minLength AND :maxLength " +
+           "AND (:level IS NULL OR w.vocabularyLevel = :level) " +
+           "ORDER BY FUNCTION('RAND')")
+    List<Word> findByContainingCharacterWithDefinitionsByLevel(
+        @Param("character") String character,
+        @Param("minLength") Integer minLength,
+        @Param("maxLength") Integer maxLength,
+        @Param("level") String level,
+        Pageable pageable
+    );
 }

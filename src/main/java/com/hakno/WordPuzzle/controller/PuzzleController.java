@@ -15,17 +15,18 @@ public class PuzzleController {
 
     @GetMapping("/generate")
     public ResponseEntity<PuzzleResponse> generatePuzzle(
-            @RequestParam(defaultValue = "15") int gridSize,
-            @RequestParam(defaultValue = "10") int wordCount) {
+            @RequestParam(required = false) Integer gridSize,
+            @RequestParam(defaultValue = "10") int wordCount,
+            @RequestParam(required = false) String level) {
 
-        if (gridSize < 5 || gridSize > 30) {
-            return ResponseEntity.badRequest().build();
-        }
         if (wordCount < 3 || wordCount > 50) {
             return ResponseEntity.badRequest().build();
         }
+        if (gridSize != null && (gridSize < 5 || gridSize > 30)) {
+            return ResponseEntity.badRequest().build();
+        }
 
-        PuzzleResponse puzzle = puzzleGeneratorService.generatePuzzle(gridSize, wordCount);
+        PuzzleResponse puzzle = puzzleGeneratorService.generatePuzzle(gridSize, wordCount, level);
         return ResponseEntity.ok(puzzle);
     }
 }

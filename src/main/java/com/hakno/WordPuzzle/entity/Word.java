@@ -14,7 +14,9 @@ import java.util.List;
     @Index(name = "idx_word_length", columnList = "length"),
     @Index(name = "idx_word_word", columnList = "word"),
     @Index(name = "idx_word_first_char", columnList = "firstChar"),
-    @Index(name = "idx_word_first_char_length", columnList = "firstChar, length")
+    @Index(name = "idx_word_first_char_length", columnList = "firstChar, length"),
+    @Index(name = "idx_word_level", columnList = "vocabularyLevel"),
+    @Index(name = "idx_word_pos", columnList = "partOfSpeech")
 })
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -33,14 +35,22 @@ public class Word {
     @Column(nullable = false, length = 1)
     private String firstChar;
 
+    @Column(length = 20)
+    private String partOfSpeech;  // 품사: 명사, 동사, 형용사 등
+
+    @Column(length = 10)
+    private String vocabularyLevel;  // 난이도: 초급, 중급, 고급
+
     @OneToMany(mappedBy = "word", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Definition> definitions = new ArrayList<>();
 
     @Builder
-    public Word(String word) {
+    public Word(String word, String partOfSpeech, String vocabularyLevel) {
         this.word = word;
         this.length = word.length();
         this.firstChar = String.valueOf(word.charAt(0));
+        this.partOfSpeech = partOfSpeech;
+        this.vocabularyLevel = vocabularyLevel;
     }
 
     public void addDefinition(Definition definition) {
