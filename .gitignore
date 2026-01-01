@@ -102,3 +102,7 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+# Temp files
+nul
+*.png
