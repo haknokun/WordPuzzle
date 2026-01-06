@@ -35,6 +35,10 @@ function App() {
     setSelectedWord({ ...word });
   };
 
+  const handleWordSelect = useCallback((word: PuzzleWord | null) => {
+    setSelectedWord(word);
+  }, []);
+
   const handleComplete = useCallback(() => {
     setCompleted(true);
   }, []);
@@ -92,6 +96,7 @@ function App() {
                 downWords={puzzle.downWords}
                 onComplete={handleComplete}
                 selectedWordFromHint={selectedWord}
+                onWordSelect={handleWordSelect}
               />
             </div>
             <div className="puzzle-right">

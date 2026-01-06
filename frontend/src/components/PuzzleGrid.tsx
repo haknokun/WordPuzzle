@@ -15,9 +15,10 @@ interface Props {
   downWords: PuzzleWord[];
   onComplete: () => void;
   selectedWordFromHint?: PuzzleWord | null;
+  onWordSelect?: (word: PuzzleWord | null) => void;
 }
 
-export default function PuzzleGrid({ grid, gridSize, acrossWords, downWords, onComplete, selectedWordFromHint }: Props) {
+export default function PuzzleGrid({ grid, gridSize, acrossWords, downWords, onComplete, selectedWordFromHint, onWordSelect }: Props) {
   const [userInputs, setUserInputs] = useState<string[][]>(() =>
     Array(gridSize).fill(null).map(() => Array(gridSize).fill(''))
   );
@@ -68,6 +69,9 @@ export default function PuzzleGrid({ grid, gridSize, acrossWords, downWords, onC
 
   const handleInput = (row: number, col: number, e: React.ChangeEvent<HTMLInputElement>) => {
     if (grid[row][col].isBlank) return;
+
+    // 한글 조합 중에는 처리하지 않음 (CompositionEnd에서 처리)
+    if (isComposing.current) return;
 
     const value = e.target.value;
 
@@ -128,11 +132,25 @@ export default function PuzzleGrid({ grid, gridSize, acrossWords, downWords, onC
     isComposing.current = false;
     const value = e.currentTarget.value;
 
-    // 1글자만 유지
     if (value.length >= 1) {
       const firstChar = value.charAt(0);
       updateUserInput(row, col, firstChar);
       e.currentTarget.value = firstChar;
+
+      // 2글자 이상이면 다음 셀로 이동
+      if (value.length >= 2) {
+        const restChars = value.slice(1);
+        const nextCell = getNextCell(row, col);
+        if (nextCell) {
+          setSelectedCell(nextCell);
+          const nextInput = inputRefs.current[nextCell.row][nextCell.col];
+          if (nextInput) {
+            nextInput.value = restChars;
+            nextInput.focus();
+            updateUserInput(nextCell.row, nextCell.col, restChars);
+          }
+        }
+      }
     }
   };
 
@@ -187,6 +205,13 @@ export default function PuzzleGrid({ grid, gridSize, acrossWords, downWords, onC
       inputRefs.current[selectedCell.row][selectedCell.col]?.focus();
     }
   }, [selectedCell]);
+
+  // 그리드에서 단어 선택 시 부모에게 알림
+  useEffect(() => {
+    if (onWordSelect && selectedWord) {
+      onWordSelect(selectedWord);
+    }
+  }, [selectedWord, onWordSelect]);
 
   // 완료 체크
   useEffect(() => {

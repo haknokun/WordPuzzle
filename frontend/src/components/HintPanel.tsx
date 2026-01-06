@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import type { PuzzleWord } from '../types/puzzle';
 import { getChosung } from '../utils/chosung';
 import './HintPanel.css';
@@ -12,6 +12,16 @@ interface Props {
 
 export default function HintPanel({ acrossWords, downWords, selectedWord, onWordClick }: Props) {
   const [revealedChosung, setRevealedChosung] = useState<Set<string>>(new Set());
+  const hintRefs = useRef<Map<string, HTMLLIElement>>(new Map());
+
+  // 선택된 힌트로 자동 스크롤
+  useEffect(() => {
+    if (selectedWord) {
+      const key = `${selectedWord.direction.toLowerCase()}-${selectedWord.number}`;
+      const element = hintRefs.current.get(key);
+      element?.scrollIntoView?.({ behavior: 'smooth', block: 'nearest' });
+    }
+  }, [selectedWord]);
 
   const toggleChosung = (e: React.MouseEvent, key: string) => {
     e.stopPropagation(); // 힌트 클릭 이벤트 전파 방지
@@ -37,6 +47,7 @@ export default function HintPanel({ acrossWords, downWords, selectedWord, onWord
             return (
               <li
                 key={key}
+                ref={(el) => { if (el) hintRefs.current.set(key, el); }}
                 className={selectedWord?.number === word.number && selectedWord?.direction === 'ACROSS' ? 'selected' : ''}
                 onClick={() => onWordClick(word)}
               >
@@ -69,6 +80,7 @@ export default function HintPanel({ acrossWords, downWords, selectedWord, onWord
             return (
               <li
                 key={key}
+                ref={(el) => { if (el) hintRefs.current.set(key, el); }}
                 className={selectedWord?.number === word.number && selectedWord?.direction === 'DOWN' ? 'selected' : ''}
                 onClick={() => onWordClick(word)}
               >
