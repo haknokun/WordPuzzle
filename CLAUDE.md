@@ -71,9 +71,10 @@ PuzzleController (/api/puzzle/generate)
 7. Words numbered independently: ACROSS (1,2,3...) and DOWN (1,2,3...)
 
 ### Frontend Components
-- `App.tsx`: State management (puzzle, selectedWord, completed, level)
-- `PuzzleGrid.tsx`: Grid rendering, user input handling, keyboard navigation, completion detection
-- `HintPanel.tsx`: Displays ACROSS/DOWN clues with chosung(초성) hint toggle
+- `App.tsx`: State management (puzzle, selectedWord, completed, level), 양방향 동기화
+- `PuzzleGrid.tsx`: Grid rendering, user input handling, keyboard navigation, completion detection, `onWordSelect` 콜백
+- `HintPanel.tsx`: Displays ACROSS/DOWN clues with chosung(초성) hint toggle, 자동 스크롤
+- `usePuzzleNavigation.ts`: 셀 선택, 키보드 네비게이션, 방향 전환 커스텀 훅
 
 ### Data Model
 - `Word` entity: word, length, firstChar, partOfSpeech, vocabularyLevel, List<Definition>
@@ -97,9 +98,18 @@ PuzzleController (/api/puzzle/generate)
 - `frontend/src/__tests__/components/` - React component tests (PuzzleGrid, HintPanel)
 
 ### E2E Tests
-- `tests/*.spec.ts` - Playwright tests for puzzle, difficulty, completion flows
+- `tests/*.spec.ts` - Playwright tests for puzzle, difficulty, completion, korean-ime flows
 - Runs against 4 browsers: Chromium, Firefox, WebKit, Edge
 - Auto-starts frontend dev server via webServer config
+- Playwright config: retries=2, workers=4, timeout=60s (flaky 방지)
+
+### Test Coverage
+| 영역 | 테스트 수 | 커버리지 |
+|------|----------|----------|
+| Backend | 63 | 95% |
+| Frontend | 122 | 96% |
+| E2E | 43 | - |
+| **Total** | **228** | - |
 
 ## Key Implementation Details
 
@@ -107,8 +117,14 @@ PuzzleController (/api/puzzle/generate)
 - Frontend maintains separate `userInputs[][]` state from puzzle answer grid
 - Cell numbers stored as `acrossNumber`/`downNumber` (both can exist on same cell)
 - Word data in `/data/*.json` files, imported via DataImportService
-- Korean IME handling with CompositionEvent (onCompositionStart/End)
 - Deep copy for userInputs state: `prev.map(r => [...r])`
+- Grid ↔ Hint 양방향 동기화: `onWordSelect` 콜백 + `scrollIntoView`
+
+### Korean IME Handling
+- `onCompositionStart`: `isComposing = true` 설정
+- `onCompositionEnd`: 최종 글자 처리 + 다음 셀 이동
+- `handleInput`: `isComposing` 중에는 무시 (복합 모음 조합 보호)
+- 복합 모음 지원: 의(ㅇ+ㅡ+ㅣ), 왜(ㅇ+ㅗ+ㅐ), 귀(ㄱ+ㅜ+ㅣ) 등
 
 ### 난이도별 단어 분포
 | 난이도 | 단어 수 |
