@@ -97,17 +97,18 @@ test.describe('Error Handling Tests', () => {
   test('loading state shows during puzzle generation', async ({ page }) => {
     await page.goto('/');
 
-    // 느린 네트워크 시뮬레이션
+    // 느린 네트워크 시뮬레이션 (3초 지연)
     await page.route('**/api/puzzle/**', async route => {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise(resolve => setTimeout(resolve, 3000));
       await route.continue();
     });
 
-    const generateButton = page.getByRole('button', { name: '새 퍼즐 생성' });
+    // 버튼을 controls 영역에서 찾기 (텍스트 변경 후에도 찾을 수 있도록)
+    const generateButton = page.locator('.controls button');
     await generateButton.click();
 
     // 버튼이 "생성 중..." 으로 변경되는지 확인
-    await expect(generateButton).toHaveText('생성 중...');
+    await expect(generateButton).toHaveText('생성 중...', { timeout: 2000 });
   });
 });
 

@@ -25,8 +25,8 @@ test.describe('Korean Crossword Puzzle', () => {
     // 새 퍼즐 생성 버튼 클릭
     await page.getByRole('button', { name: '새 퍼즐 생성' }).click();
 
-    // 퍼즐 로딩 대기
-    await page.waitForTimeout(3000);
+    // 퍼즐 그리드 로딩 대기
+    await expect(page.locator('.puzzle-grid')).toBeVisible({ timeout: 30000 });
 
     // 가로/세로 힌트가 표시되는지 확인
     await expect(page.getByText('가로 열쇠')).toBeVisible({ timeout: 5000 });
@@ -46,13 +46,14 @@ test.describe('Keyboard Input Tests', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
     await page.getByRole('button', { name: '새 퍼즐 생성' }).click();
-    await page.waitForTimeout(2000);
+    // 퍼즐 그리드가 로드될 때까지 대기
+    await expect(page.locator('.puzzle-grid')).toBeVisible({ timeout: 30000 });
   });
 
   test('can click cell and type Korean character', async ({ page }) => {
     // 활성화된 셀 찾기 (blank가 아닌 셀)
     const activeCell = page.locator('.puzzle-cell.active').first();
-    await expect(activeCell).toBeVisible();
+    await expect(activeCell).toBeVisible({ timeout: 5000 });
 
     // 셀 클릭
     await activeCell.click();

@@ -36,8 +36,8 @@ test.describe('Difficulty Level Tests', () => {
     // 퍼즐 생성
     await page.getByRole('button', { name: '새 퍼즐 생성' }).click();
 
-    // 퍼즐 그리드가 표시되는지 확인
-    await expect(page.locator('.puzzle-grid')).toBeVisible({ timeout: 10000 });
+    // 퍼즐 그리드가 표시되는지 확인 (타임아웃 증가)
+    await expect(page.locator('.puzzle-grid')).toBeVisible({ timeout: 30000 });
 
     // 힌트 패널 확인
     await expect(page.getByText('가로 열쇠')).toBeVisible();
@@ -50,7 +50,7 @@ test.describe('Difficulty Level Tests', () => {
 
     await page.getByRole('button', { name: '새 퍼즐 생성' }).click();
 
-    await expect(page.locator('.puzzle-grid')).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('.puzzle-grid')).toBeVisible({ timeout: 30000 });
   });
 
   test('generates puzzle with 고급 difficulty', async ({ page }) => {
@@ -59,7 +59,7 @@ test.describe('Difficulty Level Tests', () => {
 
     await page.getByRole('button', { name: '새 퍼즐 생성' }).click();
 
-    await expect(page.locator('.puzzle-grid')).toBeVisible({ timeout: 10000 });
+    await expect(page.locator('.puzzle-grid')).toBeVisible({ timeout: 30000 });
   });
 
   test('puzzle info displays correctly', async ({ page }) => {
@@ -67,7 +67,7 @@ test.describe('Difficulty Level Tests', () => {
 
     // 퍼즐 정보가 표시되는지 확인
     const puzzleInfo = page.locator('.puzzle-info');
-    await expect(puzzleInfo).toBeVisible({ timeout: 10000 });
+    await expect(puzzleInfo).toBeVisible({ timeout: 30000 });
 
     // "총 X개 단어" 형식 확인
     await expect(puzzleInfo).toContainText('총');

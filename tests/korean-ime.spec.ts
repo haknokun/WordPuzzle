@@ -6,7 +6,7 @@ test.describe('한글 복합 모음 입력 테스트', () => {
 
     // 퍼즐 생성
     await page.click('button:has-text("새 퍼즐 생성")');
-    await page.waitForSelector('.puzzle-grid');
+    await page.waitForSelector('.puzzle-grid', { timeout: 30000 });
   });
 
   test('의 (ㅇ+ㅡ+ㅣ) 입력', async ({ page }) => {
