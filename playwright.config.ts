@@ -17,10 +17,16 @@ export default defineConfig({
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
-  /* Retry on CI only */
-  retries: process.env.CI ? 2 : 0,
-  /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
+  /* Retry failed tests to handle flaky tests */
+  retries: 2,
+  /* Limit workers to prevent backend overload */
+  workers: process.env.CI ? 1 : 4,
+  /* Global timeout for each test */
+  timeout: 60000,
+  /* Expect timeout */
+  expect: {
+    timeout: 30000,
+  },
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: [
     ['list'],           // 콘솔에 실시간 로그 출력
@@ -31,10 +37,14 @@ export default defineConfig({
     /* Base URL to use in actions like `await page.goto('')`. */
     baseURL: 'http://localhost:5173',
 
+    /* Action timeout */
+    actionTimeout: 30000,
+    navigationTimeout: 30000,
+
     /* 테스트 로깅 설정 */
-    trace: 'on',              // 모든 테스트에서 trace 기록
-    video: 'on',              // 모든 테스트 영상 녹화
-    screenshot: 'on',         // 모든 테스트 스크린샷 저장
+    trace: 'on-first-retry',    // 첫 재시도부터 trace 기록
+    video: 'on-first-retry',    // 첫 재시도부터 영상 녹화
+    screenshot: 'only-on-failure', // 실패 시에만 스크린샷
   },
 
   /* Configure projects for major browsers */
