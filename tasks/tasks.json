@@ -1,0 +1,244 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Backend PuzzleGeneratorService 테스트 추가",
+      "description": "16.3% → ~94% 커버리지 달성. 20개 테스트 추가 완료",
+      "status": "completed",
+      "priority": "high",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "tryGeneratePuzzle 메서드 테스트",
+          "status": "completed"
+        },
+        {
+          "id": 2,
+          "title": "findIntersectionCandidates 테스트",
+          "status": "completed"
+        },
+        {
+          "id": 3,
+          "title": "canPlaceWord 배치 검증 테스트",
+          "status": "completed"
+        },
+        {
+          "id": 4,
+          "title": "placeWord / createPuzzleWord 테스트",
+          "status": "completed"
+        }
+      ],
+      "dependencies": [],
+      "tags": ["backend", "coverage", "service"]
+    },
+    {
+      "id": 2,
+      "title": "Backend WordController 테스트 추가",
+      "description": "0% → 100% 커버리지 달성. 17개 테스트 추가 완료",
+      "status": "completed",
+      "priority": "medium",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "getById 엔드포인트 테스트",
+          "status": "completed"
+        },
+        {
+          "id": 2,
+          "title": "searchByWord 엔드포인트 테스트",
+          "status": "completed"
+        },
+        {
+          "id": 3,
+          "title": "getByLength / getRandom / count 테스트",
+          "status": "completed"
+        }
+      ],
+      "dependencies": [],
+      "tags": ["backend", "coverage", "controller"]
+    },
+    {
+      "id": 3,
+      "title": "Backend DataImportController 테스트 추가",
+      "description": "0% → 100% 커버리지 달성. 12개 테스트 추가 완료",
+      "status": "completed",
+      "priority": "low",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "importData 성공 케이스 테스트",
+          "status": "completed"
+        },
+        {
+          "id": 2,
+          "title": "importData 에러 처리 테스트",
+          "status": "completed"
+        }
+      ],
+      "dependencies": [],
+      "tags": ["backend", "coverage", "controller"]
+    },
+    {
+      "id": 4,
+      "title": "Frontend PuzzleGrid 컴포넌트 테스트 확장",
+      "description": "13개 → 30개 테스트 확장 완료 (+17개)",
+      "status": "completed",
+      "priority": "high",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "키보드 네비게이션 테스트 (화살표, Tab)",
+          "status": "completed"
+        },
+        {
+          "id": 2,
+          "title": "한글 IME 입력 테스트 (Composition)",
+          "status": "completed"
+        },
+        {
+          "id": 3,
+          "title": "퍼즐 완료 감지 로직 테스트",
+          "status": "completed"
+        },
+        {
+          "id": 4,
+          "title": "셀 선택 및 하이라이트 테스트",
+          "status": "completed"
+        }
+      ],
+      "dependencies": [],
+      "tags": ["frontend", "coverage", "component"]
+    },
+    {
+      "id": 5,
+      "title": "Frontend usePuzzleNavigation 훅 테스트 확장",
+      "description": "13개 → 31개 테스트 확장 완료 (+18개). moveToPrevCell 등 경계 케이스 커버",
+      "status": "completed",
+      "priority": "medium",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "엣지 케이스: 그리드 경계 네비게이션",
+          "status": "completed"
+        },
+        {
+          "id": 2,
+          "title": "방향 전환 로직 테스트",
+          "status": "completed"
+        }
+      ],
+      "dependencies": [4],
+      "tags": ["frontend", "coverage", "hook"]
+    },
+    {
+      "id": 6,
+      "title": "Backend Service 패키지 커버리지 개선",
+      "description": "service 패키지 67% → 95% 달성 (목표 85% 초과). WordService 11개, DataImportService 16개, PlacementValidator 34개 테스트 추가",
+      "status": "completed",
+      "priority": "medium",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "WordService 테스트 추가 (0% → 100%)",
+          "status": "completed"
+        },
+        {
+          "id": 2,
+          "title": "DataImportService 테스트 추가 (1% → 97%)",
+          "status": "completed"
+        },
+        {
+          "id": 3,
+          "title": "PlacementValidator 브랜치 커버리지 개선 (48% → 88%)",
+          "status": "completed"
+        }
+      ],
+      "dependencies": [],
+      "tags": ["backend", "coverage", "service"]
+    },
+    {
+      "id": 7,
+      "title": "Frontend HintPanel Branch 커버리지 개선",
+      "description": "HintPanel.tsx Branch 88.88% → 95% 목표 (미커버: 73-83 라인)",
+      "status": "pending",
+      "priority": "low",
+      "subtasks": [
+        {
+          "id": 1,
+          "title": "초성 토글 엣지 케이스 테스트",
+          "status": "pending"
+        }
+      ],
+      "dependencies": [],
+      "tags": ["frontend", "coverage", "component"]
+    }
+  ],
+  "metadata": {
+    "projectName": "WordPuzzle",
+    "createdAt": "2026-01-02",
+    "updatedAt": "2026-01-06",
+    "version": "1.2.0",
+    "coverageBaseline": {
+      "backend": {
+        "total": "29.0%",
+        "service": "16.3%",
+        "controller": "26.1%"
+      },
+      "frontend": {
+        "total": "67.8%",
+        "PuzzleGrid": "44.3%",
+        "usePuzzleNavigation": "71.9%"
+      }
+    },
+    "coverageCurrent": {
+      "backend": {
+        "total": "95%",
+        "totalBranch": "87%",
+        "packages": {
+          "controller": "100%",
+          "config": "100%",
+          "entity": "100%",
+          "util": "98%",
+          "service": "95%",
+          "dto": "100%"
+        },
+        "serviceDetails": {
+          "WordService": "100%",
+          "DataImportService": "97%",
+          "PlacementValidator": "100%",
+          "PuzzleGeneratorService": "91%"
+        }
+      },
+      "frontend": {
+        "total": "95.56%",
+        "totalBranch": "89.74%",
+        "totalFunctions": "96.22%",
+        "testCount": 110,
+        "files": {
+          "PuzzleGrid.tsx": "93.39%",
+          "HintPanel.tsx": "90%",
+          "usePuzzleNavigation.ts": "100%",
+          "chosung.ts": "92.85%",
+          "puzzleUtils.ts": "97.87%"
+        }
+      }
+    },
+    "testSummary": {
+      "frontend": {
+        "total": 110,
+        "files": 6
+      },
+      "backend": {
+        "serviceTests": {
+          "WordServiceTest": 11,
+          "DataImportServiceTest": 16,
+          "PlacementValidatorTest": 34
+        }
+      },
+      "e2e": {
+        "total": 152,
+        "browsers": 4
+      }
+    }
+  }
+}

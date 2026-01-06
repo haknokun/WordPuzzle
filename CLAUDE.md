@@ -10,9 +10,11 @@ Korean crossword puzzle (십자말풀이) web application. Backend generates puz
 
 ### Backend (Spring Boot)
 ```bash
-./gradlew bootRun          # Run server on port 8080
-./gradlew build            # Build project
-./gradlew test             # Run tests
+./gradlew bootRun                    # Run server on port 8080
+./gradlew build                      # Build project
+./gradlew test                       # Run all tests
+./gradlew test --tests "ClassName"   # Run single test class
+./gradlew test --tests "*.methodName" # Run single test method
 ```
 
 ### Frontend (React + Vite)
@@ -22,6 +24,18 @@ npm install                # Install dependencies
 npm run dev                # Dev server on port 5173
 npm run build              # Production build
 npm run lint               # ESLint check
+npm run test               # Run vitest in watch mode
+npm run test:run           # Run tests once
+npm run test:coverage      # Run tests with coverage report
+npx vitest run path/to/file.test.ts  # Run single test file
+```
+
+### E2E Tests (Playwright)
+```bash
+npx playwright test                    # Run all E2E tests (auto-starts frontend)
+npx playwright test puzzle.spec.ts     # Run single test file
+npx playwright test --project=chromium # Run in specific browser
+npx playwright test --ui               # Open interactive UI mode
 ```
 
 ### Prerequisites
@@ -69,6 +83,23 @@ PuzzleController (/api/puzzle/generate)
 ### API
 - `GET /api/puzzle/generate?gridSize=15&wordCount=10&level=초급` - Generate puzzle (level: 초급/중급/고급/null)
 - `POST /api/import?path=...` - Import word data from JSON files
+
+## Testing Architecture
+
+### Backend Tests
+- `src/test/.../unit/` - Unit tests for utility classes (GridUtils, GridConverter, PlacementValidator)
+- `src/test/.../repository/` - Repository tests with H2 in-memory database
+- `src/test/.../integration/` - Controller integration tests with @WebMvcTest
+
+### Frontend Tests
+- `frontend/src/__tests__/utils/` - Pure function tests (chosung, puzzleUtils)
+- `frontend/src/__tests__/hooks/` - Custom hook tests (usePuzzleNavigation)
+- `frontend/src/__tests__/components/` - React component tests (PuzzleGrid, HintPanel)
+
+### E2E Tests
+- `tests/*.spec.ts` - Playwright tests for puzzle, difficulty, completion flows
+- Runs against 4 browsers: Chromium, Firefox, WebKit, Edge
+- Auto-starts frontend dev server via webServer config
 
 ## Key Implementation Details
 

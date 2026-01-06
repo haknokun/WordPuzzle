@@ -109,3 +109,9 @@ node_modules/
 # Temp files
 nul
 *.png
+
+# MCP config (contains API keys)
+.mcp.json
+
+# Taskmaster
+.taskmaster/
