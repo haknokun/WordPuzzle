@@ -104,6 +104,8 @@
   outline: none;
   color: #1a1a2e;
   caret-color: #4a9eff;
+  overflow: hidden;
+  text-overflow: clip;
 }
 
 .puzzle-cell.active.selected input {
