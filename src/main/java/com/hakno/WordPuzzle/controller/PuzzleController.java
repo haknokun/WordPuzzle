@@ -17,7 +17,8 @@ public class PuzzleController {
     public ResponseEntity<PuzzleResponse> generatePuzzle(
             @RequestParam(required = false) Integer gridSize,
             @RequestParam(defaultValue = "10") int wordCount,
-            @RequestParam(required = false) String level) {
+            @RequestParam(required = false) String level,
+            @RequestParam(defaultValue = "default") String source) {
 
         if (wordCount < 3 || wordCount > 50) {
             return ResponseEntity.badRequest().build();
@@ -26,7 +27,7 @@ public class PuzzleController {
             return ResponseEntity.badRequest().build();
         }
 
-        PuzzleResponse puzzle = puzzleGeneratorService.generatePuzzle(gridSize, wordCount, level);
+        PuzzleResponse puzzle = puzzleGeneratorService.generatePuzzle(gridSize, wordCount, level, source);
         return ResponseEntity.ok(puzzle);
     }
 }

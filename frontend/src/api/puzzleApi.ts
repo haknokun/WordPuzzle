@@ -4,9 +4,10 @@ const API_BASE = 'http://localhost:8080/api';
 
 export const generatePuzzle = async (
   wordCount: number = 10,
-  level?: string
+  level?: string,
+  source: 'default' | 'std' = 'std'
 ): Promise<PuzzleResponse> => {
-  let url = `${API_BASE}/puzzle/generate?wordCount=${wordCount}`;
+  let url = `${API_BASE}/puzzle/generate?wordCount=${wordCount}&source=${source}`;
   if (level) {
     url += `&level=${encodeURIComponent(level)}`;
   }

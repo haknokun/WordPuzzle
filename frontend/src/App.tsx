@@ -13,13 +13,14 @@ function App() {
   const [completed, setCompleted] = useState(false);
   const [wordCount, setWordCount] = useState(10);
   const [level, setLevel] = useState<string>('');
+  const [source, setSource] = useState<'default' | 'std'>('std');
 
   const handleGenerate = async () => {
     setLoading(true);
     setError(null);
     setCompleted(false);
     try {
-      const data = await generatePuzzle(wordCount, level || undefined);
+      const data = await generatePuzzle(wordCount, level || undefined, source);
       console.log('API Response:', data);
       console.log('Grid:', data.grid);
       setPuzzle(data);
@@ -62,11 +63,22 @@ function App() {
         </label>
         <label>
           난이도:
-          <select value={level} onChange={(e) => setLevel(e.target.value)}>
+          <select
+            value={level}
+            onChange={(e) => setLevel(e.target.value)}
+            disabled={source === 'std'}
+          >
             <option value="">전체</option>
             <option value="초급">초급</option>
             <option value="중급">중급</option>
             <option value="고급">고급</option>
+          </select>
+        </label>
+        <label>
+          데이터:
+          <select value={source} onChange={(e) => setSource(e.target.value as 'default' | 'std')}>
+            <option value="std">표준국어대사전</option>
+            <option value="default">한국어기초사전</option>
           </select>
         </label>
         <button onClick={handleGenerate} disabled={loading}>

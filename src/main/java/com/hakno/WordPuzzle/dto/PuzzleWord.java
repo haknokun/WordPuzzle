@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Builder
@@ -14,7 +15,9 @@ public class PuzzleWord {
     private Integer number;
     private String word;
     private String definition;
+    @Setter
     private int startRow;
+    @Setter
     private int startCol;
     private Direction direction;
 

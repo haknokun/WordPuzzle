@@ -3,7 +3,9 @@ package com.hakno.WordPuzzle.service;
 import com.hakno.WordPuzzle.dto.PuzzleCell;
 import com.hakno.WordPuzzle.dto.PuzzleResponse;
 import com.hakno.WordPuzzle.dto.PuzzleWord;
+import com.hakno.WordPuzzle.entity.StdWord;
 import com.hakno.WordPuzzle.entity.Word;
+import com.hakno.WordPuzzle.repository.StdWordRepository;
 import com.hakno.WordPuzzle.repository.WordRepository;
 import com.hakno.WordPuzzle.util.GridConverter;
 import com.hakno.WordPuzzle.util.GridUtils;
@@ -21,17 +23,33 @@ import java.util.*;
 public class PuzzleGeneratorService {
 
     private final WordRepository wordRepository;
+    private final StdWordRepository stdWordRepository;
     private final PlacementValidator placementValidator;
     private final GridConverter gridConverter;
 
     private static final int MAX_ATTEMPTS = 200;
     private static final int SEARCH_LIMIT = 100;
 
+    // 데이터 소스 상수
+    public static final String SOURCE_DEFAULT = "default";
+    public static final String SOURCE_STD = "std";
+
     public PuzzleResponse generatePuzzle(Integer gridSize, int targetWordCount) {
-        return generatePuzzle(gridSize, targetWordCount, null);
+        return generatePuzzle(gridSize, targetWordCount, null, SOURCE_DEFAULT);
     }
 
     public PuzzleResponse generatePuzzle(Integer gridSize, int targetWordCount, String level) {
+        return generatePuzzle(gridSize, targetWordCount, level, SOURCE_DEFAULT);
+    }
+
+    public PuzzleResponse generatePuzzle(Integer gridSize, int targetWordCount, String level, String source) {
+        if (SOURCE_STD.equalsIgnoreCase(source)) {
+            return generatePuzzleFromStd(gridSize, targetWordCount);
+        }
+        return generatePuzzleFromDefault(gridSize, targetWordCount, level);
+    }
+
+    private PuzzleResponse generatePuzzleFromDefault(Integer gridSize, int targetWordCount, String level) {
         // gridSize가 null이면 단어 수에 따라 자동 계산
         int actualGridSize = (gridSize != null) ? gridSize : GridUtils.calculateGridSize(targetWordCount);
 
@@ -123,6 +141,9 @@ public class PuzzleGeneratorService {
         }
 
         log.info("퍼즐 생성 완료: 목표 {}개, 실제 {}개, 총 시도 {}회", targetWordCount, placedWords.size(), totalAttempts);
+
+        // 퍼즐 중앙 정렬
+        centerPuzzle(grid, placedWords, gridSize);
 
         // 가로/세로 단어 분리 및 번호 부여
         List<PuzzleWord> acrossWords = new ArrayList<>();
@@ -310,6 +331,59 @@ public class PuzzleGeneratorService {
         }
     }
 
+    /**
+     * 퍼즐을 그리드 중앙으로 정렬
+     */
+    private void centerPuzzle(char[][] grid, List<PuzzleWord> placedWords, int gridSize) {
+        // 1. 사용된 셀들의 bounding box 계산
+        int minRow = gridSize, maxRow = 0, minCol = gridSize, maxCol = 0;
+        for (int row = 0; row < gridSize; row++) {
+            for (int col = 0; col < gridSize; col++) {
+                if (grid[row][col] != '\0') {
+                    minRow = Math.min(minRow, row);
+                    maxRow = Math.max(maxRow, row);
+                    minCol = Math.min(minCol, col);
+                    maxCol = Math.max(maxCol, col);
+                }
+            }
+        }
+
+        if (minRow > maxRow) return; // 빈 그리드
+
+        // 2. 이동할 offset 계산
+        int puzzleHeight = maxRow - minRow + 1;
+        int puzzleWidth = maxCol - minCol + 1;
+        int targetMinRow = (gridSize - puzzleHeight) / 2;
+        int targetMinCol = (gridSize - puzzleWidth) / 2;
+        int rowOffset = targetMinRow - minRow;
+        int colOffset = targetMinCol - minCol;
+
+        if (rowOffset == 0 && colOffset == 0) return; // 이미 중앙
+
+        // 3. 새 그리드에 복사
+        char[][] newGrid = GridUtils.createEmptyGrid(gridSize);
+        for (int row = minRow; row <= maxRow; row++) {
+            for (int col = minCol; col <= maxCol; col++) {
+                if (grid[row][col] != '\0') {
+                    newGrid[row + rowOffset][col + colOffset] = grid[row][col];
+                }
+            }
+        }
+
+        // 4. 원본 그리드에 복사
+        for (int row = 0; row < gridSize; row++) {
+            System.arraycopy(newGrid[row], 0, grid[row], 0, gridSize);
+        }
+
+        // 5. 단어 위치 조정
+        for (PuzzleWord pw : placedWords) {
+            pw.setStartRow(pw.getStartRow() + rowOffset);
+            pw.setStartCol(pw.getStartCol() + colOffset);
+        }
+
+        log.debug("퍼즐 중앙 정렬: rowOffset={}, colOffset={}", rowOffset, colOffset);
+    }
+
     private PuzzleWord createPuzzleWord(Word word, int number, int startRow, int startCol, PuzzleWord.Direction direction) {
         String definition = word.getDefinitions().isEmpty() ? "" : word.getDefinitions().get(0).getDefinition();
         return PuzzleWord.builder()
@@ -321,6 +395,170 @@ public class PuzzleGeneratorService {
                 .direction(direction)
                 .build();
     }
+
+    // ==================== StdWord 기반 퍼즐 생성 ====================
+
+    private PuzzleResponse generatePuzzleFromStd(Integer gridSize, int targetWordCount) {
+        int actualGridSize = (gridSize != null) ? gridSize : GridUtils.calculateGridSize(targetWordCount);
+
+        for (int retry = 0; retry < 3; retry++) {
+            PuzzleResponse result = tryGeneratePuzzleFromStd(actualGridSize, targetWordCount);
+            if (result.getTotalWords() >= targetWordCount * 0.7) {
+                return result;
+            }
+            log.info("StdWord 퍼즐 생성 재시도 {}/3 - 목표: {}, 달성: {}", retry + 1, targetWordCount, result.getTotalWords());
+        }
+        return tryGeneratePuzzleFromStd(actualGridSize, targetWordCount);
+    }
+
+    private PuzzleResponse tryGeneratePuzzleFromStd(int gridSize, int targetWordCount) {
+        char[][] grid = GridUtils.createEmptyGrid(gridSize);
+        List<PuzzleWord> placedWords = new ArrayList<>();
+        Set<String> usedWords = new HashSet<>();
+
+        // 첫 번째 단어 배치
+        StdWord firstWord = findFirstStdWord(gridSize);
+        if (firstWord == null) {
+            throw new IllegalStateException("StdWord 데이터가 없습니다. 먼저 데이터를 import 해주세요.");
+        }
+
+        int startRow = gridSize / 2;
+        int startCol = (gridSize - firstWord.getWord().length()) / 2;
+
+        placeWord(grid, firstWord.getWord(), startRow, startCol, PuzzleWord.Direction.ACROSS);
+        placedWords.add(createPuzzleWordFromStd(firstWord, 0, startRow, startCol, PuzzleWord.Direction.ACROSS));
+        usedWords.add(firstWord.getWord());
+
+        // 나머지 단어 배치
+        int attempts = 0;
+        while (placedWords.size() < targetWordCount && attempts < MAX_ATTEMPTS) {
+            attempts++;
+
+            List<IntersectionCandidate> candidates = findIntersectionCandidates(grid, gridSize);
+            if (candidates.isEmpty()) break;
+
+            Collections.shuffle(candidates);
+            boolean placed = false;
+
+            candidateLoop:
+            for (IntersectionCandidate candidate : candidates) {
+                List<StdWord> words = findStdWordsForIntersection(candidate, gridSize, usedWords);
+
+                for (StdWord word : words) {
+                    List<PlacementResult> placements = calculateAllPlacementsForStd(candidate, word);
+
+                    for (PlacementResult placement : placements) {
+                        if (placementValidator.canPlaceWord(grid, word.getWord(), placement.row, placement.col, placement.direction, gridSize)) {
+                            placeWord(grid, word.getWord(), placement.row, placement.col, placement.direction);
+                            placedWords.add(createPuzzleWordFromStd(word, 0, placement.row, placement.col, placement.direction));
+                            usedWords.add(word.getWord());
+                            placed = true;
+                            attempts = 0;
+                            break candidateLoop;
+                        }
+                    }
+                }
+            }
+
+            if (!placed) attempts++;
+        }
+
+        log.info("StdWord 퍼즐 생성 완료: 목표 {}개, 실제 {}개", targetWordCount, placedWords.size());
+
+        // 퍼즐 중앙 정렬
+        centerPuzzle(grid, placedWords, gridSize);
+
+        // 가로/세로 분리 및 번호 부여
+        List<PuzzleWord> acrossWords = new ArrayList<>();
+        List<PuzzleWord> downWords = new ArrayList<>();
+
+        for (PuzzleWord pw : placedWords) {
+            if (pw.getDirection() == PuzzleWord.Direction.ACROSS) {
+                acrossWords.add(pw);
+            } else {
+                downWords.add(pw);
+            }
+        }
+
+        acrossWords.sort((a, b) -> a.getStartRow() != b.getStartRow() ?
+                a.getStartRow() - b.getStartRow() : a.getStartCol() - b.getStartCol());
+        downWords.sort((a, b) -> a.getStartRow() != b.getStartRow() ?
+                a.getStartRow() - b.getStartRow() : a.getStartCol() - b.getStartCol());
+
+        List<PuzzleWord> numberedAcross = new ArrayList<>();
+        int num = 1;
+        for (PuzzleWord pw : acrossWords) {
+            numberedAcross.add(PuzzleWord.builder()
+                    .number(num++).word(pw.getWord()).definition(pw.getDefinition())
+                    .startRow(pw.getStartRow()).startCol(pw.getStartCol()).direction(pw.getDirection()).build());
+        }
+
+        List<PuzzleWord> numberedDown = new ArrayList<>();
+        num = 1;
+        for (PuzzleWord pw : downWords) {
+            numberedDown.add(PuzzleWord.builder()
+                    .number(num++).word(pw.getWord()).definition(pw.getDefinition())
+                    .startRow(pw.getStartRow()).startCol(pw.getStartCol()).direction(pw.getDirection()).build());
+        }
+
+        List<List<PuzzleCell>> cellGrid = gridConverter.convertToCellGrid(grid, numberedAcross, numberedDown, gridSize);
+
+        return PuzzleResponse.builder()
+                .gridSize(gridSize).grid(cellGrid)
+                .acrossWords(numberedAcross).downWords(numberedDown)
+                .totalWords(placedWords.size()).build();
+    }
+
+    private StdWord findFirstStdWord(int gridSize) {
+        int maxLength = Math.min(gridSize - 2, 6);
+        List<StdWord> words = stdWordRepository.findRandomWordsWithSenses(3, maxLength, PageRequest.of(0, 50));
+        if (words.isEmpty()) return null;
+
+        words.sort((a, b) -> GridUtils.countCommonChars(b.getWord()) - GridUtils.countCommonChars(a.getWord()));
+        int selectFrom = Math.min(10, words.size());
+        return words.get(new Random().nextInt(selectFrom));
+    }
+
+    private List<StdWord> findStdWordsForIntersection(IntersectionCandidate candidate, int gridSize, Set<String> usedWords) {
+        List<StdWord> words = stdWordRepository.findWordsContainingCharWithSenses(
+                String.valueOf(candidate.character), 2, gridSize, PageRequest.of(0, SEARCH_LIMIT));
+
+        List<StdWord> filtered = words.stream()
+                .filter(w -> !usedWords.contains(w.getWord()))
+                .filter(w -> w.getWord().indexOf(candidate.character) >= 0)
+                .collect(java.util.stream.Collectors.toList());
+
+        Collections.shuffle(filtered);
+        return filtered;
+    }
+
+    private List<PlacementResult> calculateAllPlacementsForStd(IntersectionCandidate candidate, StdWord word) {
+        List<PlacementResult> placements = new ArrayList<>();
+        String wordStr = word.getWord();
+
+        for (int i = 0; i < wordStr.length(); i++) {
+            if (wordStr.charAt(i) == candidate.character) {
+                if (candidate.direction == PuzzleWord.Direction.ACROSS) {
+                    placements.add(new PlacementResult(candidate.row, candidate.col - i, candidate.direction, 1));
+                } else {
+                    placements.add(new PlacementResult(candidate.row - i, candidate.col, candidate.direction, 1));
+                }
+            }
+        }
+        return placements;
+    }
+
+    private PuzzleWord createPuzzleWordFromStd(StdWord word, int number, int startRow, int startCol, PuzzleWord.Direction direction) {
+        String definition = "";
+        if (word.getSenses() != null && !word.getSenses().isEmpty()) {
+            definition = word.getSenses().get(0).getDefinition();
+        }
+        return PuzzleWord.builder()
+                .number(number).word(word.getWord()).definition(definition)
+                .startRow(startRow).startCol(startCol).direction(direction).build();
+    }
+
+    // ==================== 공통 클래스 ====================
 
     private static class IntersectionCandidate {
         int row, col;
