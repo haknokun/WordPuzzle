@@ -48,8 +48,9 @@ npx playwright test --ui               # Open interactive UI mode
 ### Backend Flow
 ```
 PuzzleController (/api/puzzle/generate)
-    → PuzzleGeneratorService.generatePuzzle(gridSize, wordCount, level)
-        → WordRepository.findRandomWordsWithDefinitionsByLevel() (fetch candidates)
+    → PuzzleGeneratorService.generatePuzzle(gridSize, wordCount, level, source, category, wordType)
+        → source=default: WordRepository (한국어기초사전)
+        → source=std: StdWordRepository (표준국어대사전)
         → Place first word at grid center (ACROSS)
         → Find intersecting placements for remaining words
         → Assign numbers separately for ACROSS/DOWN words
@@ -71,10 +72,14 @@ PuzzleController (/api/puzzle/generate)
 7. Words numbered independently: ACROSS (1,2,3...) and DOWN (1,2,3...)
 
 ### Frontend Components
-- `App.tsx`: State management (puzzle, selectedWord, completed, level), 양방향 동기화
-- `PuzzleGrid.tsx`: Grid rendering, user input handling, keyboard navigation, completion detection, `onWordSelect` 콜백
+- `App.tsx`: State management (puzzle, selectedWord, completed, level, source), 양방향 동기화
+- `PuzzleGrid.tsx`: Grid rendering, completion detection, `onWordSelect` 콜백 (훅 사용으로 159줄로 감소)
 - `HintPanel.tsx`: Displays ACROSS/DOWN clues with chosung(초성) hint toggle, 자동 스크롤
-- `usePuzzleNavigation.ts`: 셀 선택, 키보드 네비게이션, 방향 전환 커스텀 훅
+- `ThemeSelector.tsx`: 카테고리(의미 범주) 및 어종(고유어/한자어/외래어) 필터 UI
+
+### Frontend Custom Hooks
+- `usePuzzleNavigation.ts`: 셀 선택, 키보드 네비게이션, 방향 전환
+- `usePuzzleInput.ts`: 사용자 입력 처리, Korean IME 조합, 키보드 이벤트
 
 ### Data Model
 - `Word` entity: word, length, firstChar, partOfSpeech, vocabularyLevel, List<Definition>
@@ -82,23 +87,39 @@ PuzzleController (/api/puzzle/generate)
 - `PuzzleWord`: number, word, definition, startRow, startCol, direction (ACROSS/DOWN)
 
 ### API
-- `GET /api/puzzle/generate?gridSize=15&wordCount=10&level=초급` - Generate puzzle (level: 초급/중급/고급/null)
+- `GET /api/puzzle/generate?gridSize=15&wordCount=10&level=초급&source=std&category=...&wordType=...`
+  - Generate puzzle
+  - `source`: `default` (한국어기초사전) | `std` (표준국어대사전)
+  - `level`: 초급/중급/고급/null (한국어기초사전만 지원)
+  - `category`: 의미 범주 필터 (표준국어대사전)
+  - `wordType`: 고유어/한자어/외래어/혼종어 (표준국어대사전)
+- `GET /api/categories` - 표준국어대사전 카테고리 목록
+- `GET /api/hints?wordId=...&type=...` - 힌트 조회 (DEFINITION/CHOSUNG/EXAMPLE/SYNONYM)
 - `POST /api/import?path=...` - Import word data from JSON files
 
 ## Testing Architecture
 
 ### Backend Tests
-- `src/test/.../unit/` - Unit tests for utility classes (GridUtils, GridConverter, PlacementValidator)
+- `src/test/.../unit/` - Unit tests (GridUtils, GridConverter, PlacementValidator, HintService)
+- `src/test/.../service/` - Service tests (BacktrackingPuzzleGenerator, PuzzleScorer, WordCache)
+- `src/test/.../util/` - Utility tests (GridSnapshot)
 - `src/test/.../repository/` - Repository tests with H2 in-memory database
 - `src/test/.../integration/` - Controller integration tests with @WebMvcTest
 
 ### Frontend Tests
 - `frontend/src/__tests__/utils/` - Pure function tests (chosung, puzzleUtils)
-- `frontend/src/__tests__/hooks/` - Custom hook tests (usePuzzleNavigation)
+- `frontend/src/__tests__/hooks/` - Custom hook tests (usePuzzleNavigation, usePuzzleInput)
 - `frontend/src/__tests__/components/` - React component tests (PuzzleGrid, HintPanel)
 
 ### E2E Tests
-- `tests/*.spec.ts` - Playwright tests for puzzle, difficulty, completion, korean-ime flows
+- `tests/*.spec.ts` - Playwright tests
+  - `puzzle.spec.ts` - 기본 퍼즐 기능
+  - `difficulty.spec.ts` - 난이도 및 단어 수 설정
+  - `completion.spec.ts` - 퍼즐 완성 및 UI 상태
+  - `korean-ime.spec.ts` - 한글 복합 모음 입력
+  - `grid-interaction.spec.ts` - 그리드 상호작용 (18개 테스트)
+  - `hint-system.spec.ts` - 힌트 시스템 (12개 테스트)
+- `tests/pages/PuzzlePage.ts` - Page Object 패턴
 - Runs against 4 browsers: Chromium, Firefox, WebKit, Edge
 - Auto-starts frontend dev server via webServer config
 - Playwright config: retries=2, workers=4, timeout=60s (flaky 방지)
@@ -106,10 +127,10 @@ PuzzleController (/api/puzzle/generate)
 ### Test Coverage
 | 영역 | 테스트 수 | 커버리지 |
 |------|----------|----------|
-| Backend | 63 | 95% |
-| Frontend | 122 | 96% |
-| E2E | 43 | - |
-| **Total** | **228** | - |
+| Backend | 250 | 95% |
+| Frontend | 142 | 96% |
+| E2E | 73 (×4 browsers = 292) | - |
+| **Total** | **465+** | - |
 
 ## Key Implementation Details
 
@@ -172,3 +193,24 @@ LexicalResource.Lexicon.LexicalEntry[] (단어 배열)
 | Equivalent | 다국어 힌트 |
 | SenseExample | 예문 힌트 |
 | origin | 한자어 표시 |
+
+## 표준국어대사전 API 연동
+
+### 환경 설정
+```properties
+# application.properties
+stdict.api.key=${STDICT_API_KEY:}  # 환경변수, 없으면 빈 값
+stdict.api.search-url=https://stdict.korean.go.kr/api/search.do
+stdict.api.view-url=https://stdict.korean.go.kr/api/view.do
+```
+
+### StdWord 엔티티
+- `word`: 단어
+- `definition`: 정의
+- `pos`: 품사
+- `category`: 의미 범주 (가정생활, 경제, 교육 등)
+- `wordType`: 어종 (고유어, 한자어, 외래어, 혼종어)
+
+### UI 동작
+- 데이터 소스가 '표준국어대사전'일 때 난이도 선택 비활성화
+- ThemeSelector로 카테고리/어종 필터링 가능
