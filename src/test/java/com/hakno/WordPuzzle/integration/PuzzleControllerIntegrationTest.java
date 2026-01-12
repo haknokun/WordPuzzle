@@ -93,7 +93,7 @@ class PuzzleControllerIntegrationTest {
         @DisplayName("기본 파라미터로 퍼즐 생성")
         void generatePuzzle_defaultParams_returnsPuzzle() throws Exception {
             // given
-            when(puzzleGeneratorService.generatePuzzle(isNull(), eq(5), isNull()))
+            when(puzzleGeneratorService.generatePuzzle(isNull(), eq(5), isNull(), eq("default"), isNull(), isNull()))
                     .thenReturn(createMockPuzzleResponse(12));
 
             // when & then
@@ -111,7 +111,7 @@ class PuzzleControllerIntegrationTest {
         @DisplayName("gridSize 지정하여 퍼즐 생성")
         void generatePuzzle_withGridSize_returnsPuzzleWithSize() throws Exception {
             // given
-            when(puzzleGeneratorService.generatePuzzle(eq(15), eq(5), isNull()))
+            when(puzzleGeneratorService.generatePuzzle(eq(15), eq(5), isNull(), eq("default"), isNull(), isNull()))
                     .thenReturn(createMockPuzzleResponse(15));
 
             // when & then
@@ -126,7 +126,7 @@ class PuzzleControllerIntegrationTest {
         @DisplayName("난이도 지정하여 퍼즐 생성 - 초급")
         void generatePuzzle_withBeginnerLevel_returnsPuzzle() throws Exception {
             // given
-            when(puzzleGeneratorService.generatePuzzle(isNull(), eq(5), eq("초급")))
+            when(puzzleGeneratorService.generatePuzzle(isNull(), eq(5), eq("초급"), eq("default"), isNull(), isNull()))
                     .thenReturn(createMockPuzzleResponse(12));
 
             // when & then
@@ -141,7 +141,7 @@ class PuzzleControllerIntegrationTest {
         @DisplayName("퍼즐 응답에 필수 필드가 모두 포함됨")
         void generatePuzzle_responseContainsAllRequiredFields() throws Exception {
             // given
-            when(puzzleGeneratorService.generatePuzzle(isNull(), eq(5), isNull()))
+            when(puzzleGeneratorService.generatePuzzle(isNull(), eq(5), isNull(), eq("default"), isNull(), isNull()))
                     .thenReturn(createMockPuzzleResponse(12));
 
             // when & then
@@ -159,7 +159,7 @@ class PuzzleControllerIntegrationTest {
         @DisplayName("생성된 단어에 definition 포함")
         void generatePuzzle_wordsContainDefinitions() throws Exception {
             // given
-            when(puzzleGeneratorService.generatePuzzle(isNull(), eq(5), isNull()))
+            when(puzzleGeneratorService.generatePuzzle(isNull(), eq(5), isNull(), eq("default"), isNull(), isNull()))
                     .thenReturn(createMockPuzzleResponse(12));
 
             // when & then
@@ -213,7 +213,7 @@ class PuzzleControllerIntegrationTest {
         @DisplayName("wordCount 경계값 테스트 - 최소값 3")
         void generatePuzzle_wordCountMinBoundary_returnsOk() throws Exception {
             // given
-            when(puzzleGeneratorService.generatePuzzle(isNull(), eq(3), isNull()))
+            when(puzzleGeneratorService.generatePuzzle(isNull(), eq(3), isNull(), eq("default"), isNull(), isNull()))
                     .thenReturn(createMockPuzzleResponse(10));
 
             // when & then
@@ -226,7 +226,7 @@ class PuzzleControllerIntegrationTest {
         @DisplayName("wordCount 경계값 테스트 - 최대값 50")
         void generatePuzzle_wordCountMaxBoundary_returnsOk() throws Exception {
             // given
-            when(puzzleGeneratorService.generatePuzzle(isNull(), eq(50), isNull()))
+            when(puzzleGeneratorService.generatePuzzle(isNull(), eq(50), isNull(), eq("default"), isNull(), isNull()))
                     .thenReturn(createMockPuzzleResponse(25));
 
             // when & then
@@ -239,7 +239,7 @@ class PuzzleControllerIntegrationTest {
         @DisplayName("gridSize 경계값 테스트 - 최소값 5")
         void generatePuzzle_gridSizeMinBoundary_returnsOk() throws Exception {
             // given
-            when(puzzleGeneratorService.generatePuzzle(eq(5), eq(3), isNull()))
+            when(puzzleGeneratorService.generatePuzzle(eq(5), eq(3), isNull(), eq("default"), isNull(), isNull()))
                     .thenReturn(createMockPuzzleResponse(5));
 
             // when & then
@@ -253,7 +253,7 @@ class PuzzleControllerIntegrationTest {
         @DisplayName("gridSize 경계값 테스트 - 최대값 30")
         void generatePuzzle_gridSizeMaxBoundary_returnsOk() throws Exception {
             // given
-            when(puzzleGeneratorService.generatePuzzle(eq(30), eq(5), isNull()))
+            when(puzzleGeneratorService.generatePuzzle(eq(30), eq(5), isNull(), eq("default"), isNull(), isNull()))
                     .thenReturn(createMockPuzzleResponse(30));
 
             // when & then
@@ -272,7 +272,7 @@ class PuzzleControllerIntegrationTest {
         @DisplayName("wordCount 기본값은 10")
         void generatePuzzle_noWordCount_usesDefault10() throws Exception {
             // given
-            when(puzzleGeneratorService.generatePuzzle(isNull(), eq(10), isNull()))
+            when(puzzleGeneratorService.generatePuzzle(isNull(), eq(10), isNull(), eq("default"), isNull(), isNull()))
                     .thenReturn(createMockPuzzleResponse(15));
 
             // when & then

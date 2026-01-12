@@ -7,6 +7,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * @deprecated 한국어기초사전 기반 레거시 엔티티.
+ * 표준국어대사전 기반의 {@link StdSense}를 사용하세요.
+ * Phase E에서 완전히 제거될 예정입니다.
+ */
+@Deprecated(since = "2.0.0", forRemoval = true)
 @Entity
 @Table(name = "definition")
 @Getter

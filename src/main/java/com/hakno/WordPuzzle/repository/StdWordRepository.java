@@ -88,4 +88,37 @@ public interface StdWordRepository extends JpaRepository<StdWord, Long> {
     // 카테고리 목록
     @Query("SELECT DISTINCT s.category FROM StdSense s WHERE s.category IS NOT NULL ORDER BY s.category")
     List<String> findAllCategories();
+
+    // 단어유형별 랜덤 조회 (퍼즐 생성용)
+    @Query(value = "SELECT * FROM std_word WHERE word_type = :wordType AND length BETWEEN :min AND :max ORDER BY RAND() LIMIT :limit",
+           nativeQuery = true)
+    List<StdWord> findRandomWordsByWordType(@Param("wordType") String wordType,
+                                            @Param("min") int min,
+                                            @Param("max") int max,
+                                            @Param("limit") int limit);
+
+    // 단어유형별 특정 글자 포함 단어 조회
+    @Query(value = "SELECT * FROM std_word WHERE word_type = :wordType AND word LIKE %:char% AND length BETWEEN :min AND :max ORDER BY RAND() LIMIT :limit",
+           nativeQuery = true)
+    List<StdWord> findRandomWordsByWordTypeContainingChar(@Param("wordType") String wordType,
+                                                          @Param("char") String character,
+                                                          @Param("min") int min,
+                                                          @Param("max") int max,
+                                                          @Param("limit") int limit);
+
+    // 분야별 특정 글자 포함 단어 조회
+    @Query(value = "SELECT DISTINCT w.* FROM std_word w " +
+                   "JOIN std_sense s ON w.id = s.word_id " +
+                   "WHERE s.category = :category AND w.word LIKE %:char% AND w.length BETWEEN :min AND :max " +
+                   "ORDER BY RAND() LIMIT :limit",
+           nativeQuery = true)
+    List<StdWord> findRandomWordsByCategoryContainingChar(@Param("category") String category,
+                                                          @Param("char") String character,
+                                                          @Param("min") int min,
+                                                          @Param("max") int max,
+                                                          @Param("limit") int limit);
+
+    // 단어유형 목록 (DISTINCT)
+    @Query("SELECT DISTINCT w.wordType FROM StdWord w WHERE w.wordType IS NOT NULL ORDER BY w.wordType")
+    List<String> findAllWordTypes();
 }

@@ -4,6 +4,7 @@ import com.hakno.WordPuzzle.dto.PuzzleResponse;
 import com.hakno.WordPuzzle.dto.PuzzleWord;
 import com.hakno.WordPuzzle.entity.Definition;
 import com.hakno.WordPuzzle.entity.Word;
+import com.hakno.WordPuzzle.repository.StdWordRepository;
 import com.hakno.WordPuzzle.repository.WordRepository;
 import com.hakno.WordPuzzle.service.PlacementValidator;
 import com.hakno.WordPuzzle.service.PuzzleGeneratorService;
@@ -39,6 +40,9 @@ class PuzzleGeneratorServiceTest {
     @Mock
     private WordRepository wordRepository;
 
+    @Mock
+    private StdWordRepository stdWordRepository;
+
     private PlacementValidator placementValidator;
     private GridConverter gridConverter;
     private PuzzleGeneratorService puzzleGeneratorService;
@@ -48,7 +52,7 @@ class PuzzleGeneratorServiceTest {
         placementValidator = new PlacementValidator();
         gridConverter = new GridConverter();
         puzzleGeneratorService = new PuzzleGeneratorService(
-            wordRepository, placementValidator, gridConverter
+            wordRepository, stdWordRepository, placementValidator, gridConverter
         );
     }
 

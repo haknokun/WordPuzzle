@@ -43,8 +43,13 @@ public class PuzzleGeneratorService {
     }
 
     public PuzzleResponse generatePuzzle(Integer gridSize, int targetWordCount, String level, String source) {
-        if (SOURCE_STD.equalsIgnoreCase(source)) {
-            return generatePuzzleFromStd(gridSize, targetWordCount);
+        return generatePuzzle(gridSize, targetWordCount, level, source, null, null);
+    }
+
+    public PuzzleResponse generatePuzzle(Integer gridSize, int targetWordCount, String level, String source,
+                                         String category, String wordType) {
+        if (SOURCE_STD.equalsIgnoreCase(source) || category != null || wordType != null) {
+            return generatePuzzleFromStd(gridSize, targetWordCount, category, wordType);
         }
         return generatePuzzleFromDefault(gridSize, targetWordCount, level);
     }
@@ -398,28 +403,32 @@ public class PuzzleGeneratorService {
 
     // ==================== StdWord 기반 퍼즐 생성 ====================
 
-    private PuzzleResponse generatePuzzleFromStd(Integer gridSize, int targetWordCount) {
+    private PuzzleResponse generatePuzzleFromStd(Integer gridSize, int targetWordCount, String category, String wordType) {
         int actualGridSize = (gridSize != null) ? gridSize : GridUtils.calculateGridSize(targetWordCount);
 
         for (int retry = 0; retry < 3; retry++) {
-            PuzzleResponse result = tryGeneratePuzzleFromStd(actualGridSize, targetWordCount);
+            PuzzleResponse result = tryGeneratePuzzleFromStd(actualGridSize, targetWordCount, category, wordType);
             if (result.getTotalWords() >= targetWordCount * 0.7) {
                 return result;
             }
-            log.info("StdWord 퍼즐 생성 재시도 {}/3 - 목표: {}, 달성: {}", retry + 1, targetWordCount, result.getTotalWords());
+            log.info("StdWord 퍼즐 생성 재시도 {}/3 - 목표: {}, 달성: {}, 카테고리: {}, 단어유형: {}",
+                    retry + 1, targetWordCount, result.getTotalWords(), category, wordType);
         }
-        return tryGeneratePuzzleFromStd(actualGridSize, targetWordCount);
+        return tryGeneratePuzzleFromStd(actualGridSize, targetWordCount, category, wordType);
     }
 
-    private PuzzleResponse tryGeneratePuzzleFromStd(int gridSize, int targetWordCount) {
+    private PuzzleResponse tryGeneratePuzzleFromStd(int gridSize, int targetWordCount, String category, String wordType) {
         char[][] grid = GridUtils.createEmptyGrid(gridSize);
         List<PuzzleWord> placedWords = new ArrayList<>();
         Set<String> usedWords = new HashSet<>();
 
         // 첫 번째 단어 배치
-        StdWord firstWord = findFirstStdWord(gridSize);
+        StdWord firstWord = findFirstStdWord(gridSize, category, wordType);
         if (firstWord == null) {
-            throw new IllegalStateException("StdWord 데이터가 없습니다. 먼저 데이터를 import 해주세요.");
+            String filterInfo = "";
+            if (category != null) filterInfo += "카테고리=" + category;
+            if (wordType != null) filterInfo += (filterInfo.isEmpty() ? "" : ", ") + "단어유형=" + wordType;
+            throw new IllegalStateException("조건에 맞는 StdWord 데이터가 없습니다. " + filterInfo);
         }
 
         int startRow = gridSize / 2;
@@ -442,7 +451,7 @@ public class PuzzleGeneratorService {
 
             candidateLoop:
             for (IntersectionCandidate candidate : candidates) {
-                List<StdWord> words = findStdWordsForIntersection(candidate, gridSize, usedWords);
+                List<StdWord> words = findStdWordsForIntersection(candidate, gridSize, usedWords, category, wordType);
 
                 for (StdWord word : words) {
                     List<PlacementResult> placements = calculateAllPlacementsForStd(candidate, word);
@@ -463,7 +472,8 @@ public class PuzzleGeneratorService {
             if (!placed) attempts++;
         }
 
-        log.info("StdWord 퍼즐 생성 완료: 목표 {}개, 실제 {}개", targetWordCount, placedWords.size());
+        log.info("StdWord 퍼즐 생성 완료: 목표 {}개, 실제 {}개, 카테고리: {}, 단어유형: {}",
+                targetWordCount, placedWords.size(), category, wordType);
 
         // 퍼즐 중앙 정렬
         centerPuzzle(grid, placedWords, gridSize);
@@ -509,9 +519,18 @@ public class PuzzleGeneratorService {
                 .totalWords(placedWords.size()).build();
     }
 
-    private StdWord findFirstStdWord(int gridSize) {
+    private StdWord findFirstStdWord(int gridSize, String category, String wordType) {
         int maxLength = Math.min(gridSize - 2, 6);
-        List<StdWord> words = stdWordRepository.findRandomWordsWithSenses(3, maxLength, PageRequest.of(0, 50));
+        List<StdWord> words;
+
+        if (category != null) {
+            words = stdWordRepository.findRandomWordsByCategory(category, 3, maxLength, 50);
+        } else if (wordType != null) {
+            words = stdWordRepository.findRandomWordsByWordType(wordType, 3, maxLength, 50);
+        } else {
+            words = stdWordRepository.findRandomWordsWithSenses(3, maxLength, PageRequest.of(0, 50));
+        }
+
         if (words.isEmpty()) return null;
 
         words.sort((a, b) -> GridUtils.countCommonChars(b.getWord()) - GridUtils.countCommonChars(a.getWord()));
@@ -519,9 +538,18 @@ public class PuzzleGeneratorService {
         return words.get(new Random().nextInt(selectFrom));
     }
 
-    private List<StdWord> findStdWordsForIntersection(IntersectionCandidate candidate, int gridSize, Set<String> usedWords) {
-        List<StdWord> words = stdWordRepository.findWordsContainingCharWithSenses(
-                String.valueOf(candidate.character), 2, gridSize, PageRequest.of(0, SEARCH_LIMIT));
+    private List<StdWord> findStdWordsForIntersection(IntersectionCandidate candidate, int gridSize,
+                                                       Set<String> usedWords, String category, String wordType) {
+        List<StdWord> words;
+        String charStr = String.valueOf(candidate.character);
+
+        if (category != null) {
+            words = stdWordRepository.findRandomWordsByCategoryContainingChar(category, charStr, 2, gridSize, SEARCH_LIMIT);
+        } else if (wordType != null) {
+            words = stdWordRepository.findRandomWordsByWordTypeContainingChar(wordType, charStr, 2, gridSize, SEARCH_LIMIT);
+        } else {
+            words = stdWordRepository.findWordsContainingCharWithSenses(charStr, 2, gridSize, PageRequest.of(0, SEARCH_LIMIT));
+        }
 
         List<StdWord> filtered = words.stream()
                 .filter(w -> !usedWords.contains(w.getWord()))

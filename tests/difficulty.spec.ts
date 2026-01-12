@@ -1,36 +1,66 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 
 test.describe('Difficulty Level Tests', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('/');
   });
 
-  test('default difficulty is "전체"', async ({ page }) => {
-    const levelSelect = page.locator('select');
+  // 난이도 선택 셀렉트 (초급/중급/고급 옵션을 가진 select)
+  const getLevelSelect = (page: Page) => page.locator('select').filter({ has: page.locator('option[value="초급"]') });
+
+  // 데이터 소스 셀렉트 (표준국어대사전/한국어기초사전)
+  const getSourceSelect = (page: Page) => page.locator('select').filter({ has: page.locator('option[value="default"]') });
+
+  // 난이도 선택을 활성화하려면 한국어기초사전을 선택해야 함
+  const enableLevelSelect = async (page: Page) => {
+    const sourceSelect = getSourceSelect(page);
+    await sourceSelect.selectOption('default');
+  };
+
+  test('difficulty select is disabled when 표준국어대사전 is selected', async ({ page }) => {
+    const levelSelect = getLevelSelect(page);
+    await expect(levelSelect).toBeDisabled();
+  });
+
+  test('difficulty select is enabled when 한국어기초사전 is selected', async ({ page }) => {
+    await enableLevelSelect(page);
+    const levelSelect = getLevelSelect(page);
+    await expect(levelSelect).toBeEnabled();
+  });
+
+  test('default difficulty is "전체" when enabled', async ({ page }) => {
+    await enableLevelSelect(page);
+    const levelSelect = getLevelSelect(page);
     await expect(levelSelect).toHaveValue('');
   });
 
   test('can select 초급 difficulty', async ({ page }) => {
-    const levelSelect = page.locator('select');
+    await enableLevelSelect(page);
+    const levelSelect = getLevelSelect(page);
     await levelSelect.selectOption('초급');
     await expect(levelSelect).toHaveValue('초급');
   });
 
   test('can select 중급 difficulty', async ({ page }) => {
-    const levelSelect = page.locator('select');
+    await enableLevelSelect(page);
+    const levelSelect = getLevelSelect(page);
     await levelSelect.selectOption('중급');
     await expect(levelSelect).toHaveValue('중급');
   });
 
   test('can select 고급 difficulty', async ({ page }) => {
-    const levelSelect = page.locator('select');
+    await enableLevelSelect(page);
+    const levelSelect = getLevelSelect(page);
     await levelSelect.selectOption('고급');
     await expect(levelSelect).toHaveValue('고급');
   });
 
   test('generates puzzle with 초급 difficulty', async ({ page }) => {
+    // 한국어기초사전 선택하여 난이도 활성화
+    await enableLevelSelect(page);
+
     // 난이도 선택
-    const levelSelect = page.locator('select');
+    const levelSelect = getLevelSelect(page);
     await levelSelect.selectOption('초급');
 
     // 퍼즐 생성
@@ -45,7 +75,8 @@ test.describe('Difficulty Level Tests', () => {
   });
 
   test('generates puzzle with 중급 difficulty', async ({ page }) => {
-    const levelSelect = page.locator('select');
+    await enableLevelSelect(page);
+    const levelSelect = getLevelSelect(page);
     await levelSelect.selectOption('중급');
 
     await page.getByRole('button', { name: '새 퍼즐 생성' }).click();
@@ -54,7 +85,8 @@ test.describe('Difficulty Level Tests', () => {
   });
 
   test('generates puzzle with 고급 difficulty', async ({ page }) => {
-    const levelSelect = page.locator('select');
+    await enableLevelSelect(page);
+    const levelSelect = getLevelSelect(page);
     await levelSelect.selectOption('고급');
 
     await page.getByRole('button', { name: '새 퍼즐 생성' }).click();

@@ -3,6 +3,7 @@ import type { PuzzleResponse, PuzzleWord } from './types/puzzle';
 import { generatePuzzle } from './api/puzzleApi';
 import PuzzleGrid from './components/PuzzleGrid';
 import HintPanel from './components/HintPanel';
+import ThemeSelector from './components/ThemeSelector';
 import './App.css';
 
 function App() {
@@ -14,13 +15,21 @@ function App() {
   const [wordCount, setWordCount] = useState(10);
   const [level, setLevel] = useState<string>('');
   const [source, setSource] = useState<'default' | 'std'>('std');
+  const [category, setCategory] = useState<string | null>(null);
+  const [wordType, setWordType] = useState<string | null>(null);
 
   const handleGenerate = async () => {
     setLoading(true);
     setError(null);
     setCompleted(false);
     try {
-      const data = await generatePuzzle(wordCount, level || undefined, source);
+      const data = await generatePuzzle(
+        wordCount,
+        level || undefined,
+        source,
+        category || undefined,
+        wordType || undefined
+      );
       console.log('API Response:', data);
       console.log('Grid:', data.grid);
       setPuzzle(data);
@@ -85,6 +94,16 @@ function App() {
           {loading ? '생성 중...' : '새 퍼즐 생성'}
         </button>
       </div>
+
+      {source === 'std' && (
+        <div className="theme-controls">
+          <ThemeSelector
+            onCategoryChange={setCategory}
+            onWordTypeChange={setWordType}
+            disabled={loading}
+          />
+        </div>
+      )}
 
       {error && <div className="error">{error}</div>}
 

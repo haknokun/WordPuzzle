@@ -18,7 +18,9 @@ public class PuzzleController {
             @RequestParam(required = false) Integer gridSize,
             @RequestParam(defaultValue = "10") int wordCount,
             @RequestParam(required = false) String level,
-            @RequestParam(defaultValue = "default") String source) {
+            @RequestParam(defaultValue = "default") String source,
+            @RequestParam(required = false) String category,
+            @RequestParam(required = false) String wordType) {
 
         if (wordCount < 3 || wordCount > 50) {
             return ResponseEntity.badRequest().build();
@@ -27,7 +29,14 @@ public class PuzzleController {
             return ResponseEntity.badRequest().build();
         }
 
-        PuzzleResponse puzzle = puzzleGeneratorService.generatePuzzle(gridSize, wordCount, level, source);
+        // category나 wordType이 지정되면 자동으로 std 소스 사용
+        String effectiveSource = source;
+        if (category != null || wordType != null) {
+            effectiveSource = "std";
+        }
+
+        PuzzleResponse puzzle = puzzleGeneratorService.generatePuzzle(
+                gridSize, wordCount, level, effectiveSource, category, wordType);
         return ResponseEntity.ok(puzzle);
     }
 }
