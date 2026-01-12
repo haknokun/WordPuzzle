@@ -7,26 +7,10 @@
       "status": "completed",
       "priority": "high",
       "subtasks": [
-        {
-          "id": 1,
-          "title": "tryGeneratePuzzle 메서드 테스트",
-          "status": "completed"
-        },
-        {
-          "id": 2,
-          "title": "findIntersectionCandidates 테스트",
-          "status": "completed"
-        },
-        {
-          "id": 3,
-          "title": "canPlaceWord 배치 검증 테스트",
-          "status": "completed"
-        },
-        {
-          "id": 4,
-          "title": "placeWord / createPuzzleWord 테스트",
-          "status": "completed"
-        }
+        { "id": 1, "title": "tryGeneratePuzzle 메서드 테스트", "status": "completed" },
+        { "id": 2, "title": "findIntersectionCandidates 테스트", "status": "completed" },
+        { "id": 3, "title": "canPlaceWord 배치 검증 테스트", "status": "completed" },
+        { "id": 4, "title": "placeWord / createPuzzleWord 테스트", "status": "completed" }
       ],
       "dependencies": [],
       "tags": ["backend", "coverage", "service"]
@@ -38,21 +22,9 @@
       "status": "completed",
       "priority": "medium",
       "subtasks": [
-        {
-          "id": 1,
-          "title": "getById 엔드포인트 테스트",
-          "status": "completed"
-        },
-        {
-          "id": 2,
-          "title": "searchByWord 엔드포인트 테스트",
-          "status": "completed"
-        },
-        {
-          "id": 3,
-          "title": "getByLength / getRandom / count 테스트",
-          "status": "completed"
-        }
+        { "id": 1, "title": "getById 엔드포인트 테스트", "status": "completed" },
+        { "id": 2, "title": "searchByWord 엔드포인트 테스트", "status": "completed" },
+        { "id": 3, "title": "getByLength / getRandom / count 테스트", "status": "completed" }
       ],
       "dependencies": [],
       "tags": ["backend", "coverage", "controller"]
@@ -64,16 +36,8 @@
       "status": "completed",
       "priority": "low",
       "subtasks": [
-        {
-          "id": 1,
-          "title": "importData 성공 케이스 테스트",
-          "status": "completed"
-        },
-        {
-          "id": 2,
-          "title": "importData 에러 처리 테스트",
-          "status": "completed"
-        }
+        { "id": 1, "title": "importData 성공 케이스 테스트", "status": "completed" },
+        { "id": 2, "title": "importData 에러 처리 테스트", "status": "completed" }
       ],
       "dependencies": [],
       "tags": ["backend", "coverage", "controller"]
@@ -85,26 +49,10 @@
       "status": "completed",
       "priority": "high",
       "subtasks": [
-        {
-          "id": 1,
-          "title": "키보드 네비게이션 테스트 (화살표, Tab)",
-          "status": "completed"
-        },
-        {
-          "id": 2,
-          "title": "한글 IME 입력 테스트 (Composition)",
-          "status": "completed"
-        },
-        {
-          "id": 3,
-          "title": "퍼즐 완료 감지 로직 테스트",
-          "status": "completed"
-        },
-        {
-          "id": 4,
-          "title": "셀 선택 및 하이라이트 테스트",
-          "status": "completed"
-        }
+        { "id": 1, "title": "키보드 네비게이션 테스트 (화살표, Tab)", "status": "completed" },
+        { "id": 2, "title": "한글 IME 입력 테스트 (Composition)", "status": "completed" },
+        { "id": 3, "title": "퍼즐 완료 감지 로직 테스트", "status": "completed" },
+        { "id": 4, "title": "셀 선택 및 하이라이트 테스트", "status": "completed" }
       ],
       "dependencies": [],
       "tags": ["frontend", "coverage", "component"]
@@ -116,16 +64,8 @@
       "status": "completed",
       "priority": "medium",
       "subtasks": [
-        {
-          "id": 1,
-          "title": "엣지 케이스: 그리드 경계 네비게이션",
-          "status": "completed"
-        },
-        {
-          "id": 2,
-          "title": "방향 전환 로직 테스트",
-          "status": "completed"
-        }
+        { "id": 1, "title": "엣지 케이스: 그리드 경계 네비게이션", "status": "completed" },
+        { "id": 2, "title": "방향 전환 로직 테스트", "status": "completed" }
       ],
       "dependencies": [4],
       "tags": ["frontend", "coverage", "hook"]
@@ -133,25 +73,13 @@
     {
       "id": 6,
       "title": "Backend Service 패키지 커버리지 개선",
-      "description": "service 패키지 67% → 95% 달성 (목표 85% 초과). WordService 11개, DataImportService 16개, PlacementValidator 34개 테스트 추가",
+      "description": "service 패키지 67% → 95% 달성 (목표 85% 초과)",
       "status": "completed",
       "priority": "medium",
       "subtasks": [
-        {
-          "id": 1,
-          "title": "WordService 테스트 추가 (0% → 100%)",
-          "status": "completed"
-        },
-        {
-          "id": 2,
-          "title": "DataImportService 테스트 추가 (1% → 97%)",
-          "status": "completed"
-        },
-        {
-          "id": 3,
-          "title": "PlacementValidator 브랜치 커버리지 개선 (48% → 88%)",
-          "status": "completed"
-        }
+        { "id": 1, "title": "WordService 테스트 추가 (0% → 100%)", "status": "completed" },
+        { "id": 2, "title": "DataImportService 테스트 추가 (1% → 97%)", "status": "completed" },
+        { "id": 3, "title": "PlacementValidator 브랜치 커버리지 개선 (48% → 88%)", "status": "completed" }
       ],
       "dependencies": [],
       "tags": ["backend", "coverage", "service"]
@@ -159,25 +87,1137 @@
     {
       "id": 7,
       "title": "Frontend HintPanel Branch 커버리지 개선",
-      "description": "HintPanel.tsx Branch 88.88% → 95% 목표 (미커버: 73-83 라인)",
-      "status": "pending",
+      "description": "HintPanel.tsx 90% → 100% 달성. 12개 테스트 추가",
+      "status": "completed",
       "priority": "low",
       "subtasks": [
-        {
-          "id": 1,
-          "title": "초성 토글 엣지 케이스 테스트",
-          "status": "pending"
-        }
+        { "id": 1, "title": "DOWN 단어 클릭/초성 토글 테스트", "status": "completed" },
+        { "id": 2, "title": "active 클래스 상태 테스트", "status": "completed" },
+        { "id": 3, "title": "동일 번호 다른 방향 선택 처리", "status": "completed" }
       ],
       "dependencies": [],
       "tags": ["frontend", "coverage", "component"]
     }
   ],
+  "roadmap": {
+    "phases": [
+      {
+        "id": "A",
+        "title": "표준국어대사전 마이그레이션",
+        "status": "completed",
+        "duration": "1.5주",
+        "dependencies": [],
+        "blockedBy": null,
+        "tasks": [
+          {
+            "id": 8,
+            "title": "StdWord 엔티티 생성",
+            "description": "표준국어대사전 메인 단어 엔티티 (std_ 접두사)",
+            "status": "completed",
+            "priority": "high",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "StdWord.java 생성 (targetCode, word, supNo, length, firstChar, wordType, origin, pronunciation, allomorph)",
+                "status": "completed",
+                "file": "src/main/java/com/hakno/WordPuzzle/entity/StdWord.java"
+              },
+              {
+                "id": 2,
+                "title": "인덱스 설계 (length, firstChar, wordType, targetCode)",
+                "status": "completed"
+              }
+            ],
+            "dependencies": [],
+            "tags": ["backend", "entity", "phase-a"],
+            "relatedDocs": "docs/plans/PLAN_FEATURE_ROADMAP.md#A-1.1"
+          },
+          {
+            "id": 9,
+            "title": "StdSense 엔티티 생성",
+            "description": "의미/뜻풀이 엔티티 (@ManyToOne StdWord)",
+            "status": "completed",
+            "priority": "high",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "StdSense.java 생성 (senseCode, senseOrder, pos, category, definition, type)",
+                "status": "completed",
+                "file": "src/main/java/com/hakno/WordPuzzle/entity/StdSense.java"
+              },
+              {
+                "id": 2,
+                "title": "인덱스 추가 (category, pos)",
+                "status": "completed"
+              }
+            ],
+            "dependencies": [8],
+            "tags": ["backend", "entity", "phase-a"],
+            "relatedDocs": "docs/plans/PLAN_FEATURE_ROADMAP.md#A-1.2"
+          },
+          {
+            "id": 10,
+            "title": "StdExample 엔티티 생성",
+            "description": "용례 엔티티 (@ManyToOne StdSense)",
+            "status": "completed",
+            "priority": "high",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "StdExample.java 생성 (example, source, translation, origin)",
+                "status": "completed",
+                "file": "src/main/java/com/hakno/WordPuzzle/entity/StdExample.java"
+              }
+            ],
+            "dependencies": [9],
+            "tags": ["backend", "entity", "phase-a"],
+            "relatedDocs": "docs/plans/PLAN_FEATURE_ROADMAP.md#A-1.3"
+          },
+          {
+            "id": 11,
+            "title": "StdWordRelation 엔티티 생성",
+            "description": "어휘 관계 엔티티 (유의어/반의어/상위어/하위어)",
+            "status": "completed",
+            "priority": "high",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "StdWordRelation.java 생성 (relationType, relatedWord, relatedTargetCode, link)",
+                "status": "completed",
+                "file": "src/main/java/com/hakno/WordPuzzle/entity/StdWordRelation.java"
+              },
+              {
+                "id": 2,
+                "title": "인덱스 추가 (relation_type)",
+                "status": "completed"
+              }
+            ],
+            "dependencies": [9],
+            "tags": ["backend", "entity", "phase-a"],
+            "relatedDocs": "docs/plans/PLAN_FEATURE_ROADMAP.md#A-1.4"
+          },
+          {
+            "id": 12,
+            "title": "Flyway 마이그레이션 스크립트",
+            "description": "std_ 테이블 생성 DDL (JPA auto-ddl로 대체)",
+            "status": "completed",
+            "priority": "high",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "JPA hibernate.ddl-auto=update로 테이블 자동 생성",
+                "status": "completed",
+                "note": "Flyway 대신 JPA auto-ddl 사용"
+              }
+            ],
+            "dependencies": [8, 9, 10, 11],
+            "tags": ["backend", "database", "phase-a"],
+            "relatedDocs": "docs/plans/PLAN_FEATURE_ROADMAP.md#A-1.5"
+          },
+          {
+            "id": 13,
+            "title": "StdWordRepository 생성",
+            "description": "퍼즐 생성용 쿼리 메서드 (findByLength, findByFirstChar, findRandomWords 등)",
+            "status": "completed",
+            "priority": "high",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "StdWordRepository.java 생성",
+                "status": "completed",
+                "file": "src/main/java/com/hakno/WordPuzzle/repository/StdWordRepository.java"
+              },
+              {
+                "id": 2,
+                "title": "findRandomWords (MySQL RAND()) 구현",
+                "status": "completed"
+              },
+              {
+                "id": 3,
+                "title": "findByCategory 쿼리 구현",
+                "status": "completed"
+              }
+            ],
+            "dependencies": [8],
+            "tags": ["backend", "repository", "phase-a"],
+            "relatedDocs": "docs/plans/PLAN_FEATURE_ROADMAP.md#A-2.1"
+          },
+          {
+            "id": 14,
+            "title": "StdSenseRepository / StdWordRelationRepository 생성",
+            "description": "의미 및 어휘관계 Repository",
+            "status": "completed",
+            "priority": "medium",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "StdSenseRepository.java 생성",
+                "status": "completed",
+                "file": "src/main/java/com/hakno/WordPuzzle/repository/StdSenseRepository.java"
+              },
+              {
+                "id": 2,
+                "title": "StdWordRelationRepository.java 생성 (findSynonyms, findAntonyms)",
+                "status": "completed",
+                "file": "src/main/java/com/hakno/WordPuzzle/repository/StdWordRelationRepository.java"
+              }
+            ],
+            "dependencies": [9, 11],
+            "tags": ["backend", "repository", "phase-a"],
+            "relatedDocs": "docs/plans/PLAN_FEATURE_ROADMAP.md#A-2.2, A-2.3"
+          },
+          {
+            "id": 15,
+            "title": "StdictApiClient 생성",
+            "description": "표준국어대사전 API 클라이언트 (검색/상세 API)",
+            "status": "completed",
+            "priority": "high",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "StdictApiClient.java 생성 (search, getWordDetail)",
+                "status": "completed",
+                "file": "src/main/java/com/hakno/WordPuzzle/client/StdictApiClient.java"
+              },
+              {
+                "id": 2,
+                "title": "application.properties에 stdict.api.key 설정",
+                "status": "completed"
+              }
+            ],
+            "dependencies": [],
+            "tags": ["backend", "client", "phase-a"],
+            "relatedDocs": "docs/plans/PLAN_FEATURE_ROADMAP.md#A-3.1"
+          },
+          {
+            "id": 16,
+            "title": "API DTO 클래스들 생성",
+            "description": "StdictSearchResponse, StdictViewResponse",
+            "status": "completed",
+            "priority": "high",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "StdictSearchResponse.java 생성",
+                "status": "completed",
+                "file": "src/main/java/com/hakno/WordPuzzle/client/dto/StdictSearchResponse.java"
+              },
+              {
+                "id": 2,
+                "title": "StdictViewResponse.java 생성",
+                "status": "completed",
+                "file": "src/main/java/com/hakno/WordPuzzle/client/dto/StdictViewResponse.java"
+              }
+            ],
+            "dependencies": [15],
+            "tags": ["backend", "dto", "phase-a"],
+            "relatedDocs": "docs/plans/PLAN_FEATURE_ROADMAP.md#A-3.2"
+          },
+          {
+            "id": 17,
+            "title": "StdictImportService 생성",
+            "description": "API 임포트 서비스 (음절 수별 임포트, Rate Limiting)",
+            "status": "completed",
+            "priority": "high",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "StdictImportService.java 생성 (importByLength, importAll)",
+                "status": "completed",
+                "file": "src/main/java/com/hakno/WordPuzzle/service/StdictImportService.java"
+              },
+              {
+                "id": 2,
+                "title": "Rate limiting 구현 (100ms 간격)",
+                "status": "completed"
+              },
+              {
+                "id": 3,
+                "title": "에러 시 재시도 로직 (3회, exponential backoff)",
+                "status": "completed"
+              }
+            ],
+            "dependencies": [15, 16, 13],
+            "tags": ["backend", "service", "phase-a"],
+            "relatedDocs": "docs/plans/PLAN_FEATURE_ROADMAP.md#A-3.3"
+          },
+          {
+            "id": 18,
+            "title": "ImportProgress DTO 및 임포트 컨트롤러",
+            "description": "임포트 진행률 조회 및 제어 API",
+            "status": "completed",
+            "priority": "medium",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "ImportProgress.java 생성 (totalExpected, imported, failed, currentPhase)",
+                "status": "completed",
+                "file": "src/main/java/com/hakno/WordPuzzle/dto/ImportProgress.java"
+              },
+              {
+                "id": 2,
+                "title": "StdictImportController.java 생성",
+                "status": "completed",
+                "file": "src/main/java/com/hakno/WordPuzzle/controller/StdictImportController.java"
+              },
+              {
+                "id": 3,
+                "title": "POST /api/stdict/import/start 엔드포인트",
+                "status": "completed"
+              },
+              {
+                "id": 4,
+                "title": "GET /api/stdict/import/progress 엔드포인트",
+                "status": "completed"
+              },
+              {
+                "id": 5,
+                "title": "GET /api/stdict/stats 엔드포인트",
+                "status": "completed"
+              }
+            ],
+            "dependencies": [17],
+            "tags": ["backend", "controller", "phase-a"],
+            "relatedDocs": "docs/plans/PLAN_FEATURE_ROADMAP.md#A-3.4, A-3.5"
+          },
+          {
+            "id": 19,
+            "title": "StdPuzzleGeneratorService 생성",
+            "description": "새 엔티티 기반 퍼즐 생성 서비스 (PuzzleGeneratorService에 통합)",
+            "status": "completed",
+            "priority": "high",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "PuzzleGeneratorService에 generatePuzzleFromStd 메서드 추가",
+                "status": "completed",
+                "file": "src/main/java/com/hakno/WordPuzzle/service/PuzzleGeneratorService.java"
+              },
+              {
+                "id": 2,
+                "title": "source 파라미터로 데이터 소스 선택 기능",
+                "status": "completed"
+              }
+            ],
+            "dependencies": [13],
+            "tags": ["backend", "service", "phase-a"],
+            "relatedDocs": "docs/plans/PLAN_FEATURE_ROADMAP.md#A-4.1"
+          },
+          {
+            "id": 20,
+            "title": "PuzzleGeneratorInterface 및 설정 기반 구현체 선택",
+            "description": "source 파라미터로 런타임 데이터 소스 선택 (인터페이스 대신 파라미터 방식 채택)",
+            "status": "completed",
+            "priority": "medium",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "generatePuzzle(gridSize, wordCount, level, source) 메서드 추가",
+                "status": "completed"
+              },
+              {
+                "id": 2,
+                "title": "SOURCE_DEFAULT, SOURCE_STD 상수 정의",
+                "status": "completed"
+              }
+            ],
+            "dependencies": [19],
+            "tags": ["backend", "refactoring", "phase-a"],
+            "relatedDocs": "docs/plans/PLAN_FEATURE_ROADMAP.md#A-4.2, A-4.3"
+          },
+          {
+            "id": 21,
+            "title": "기존 엔티티 @Deprecated 처리",
+            "description": "Word, Definition, WordRepository, DataImportService deprecated 처리 - forRemoval=true 설정으로 Phase E 제거 예정 명시",
+            "status": "completed",
+            "priority": "low",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "Word.java에 @Deprecated(since=\"2.0.0\", forRemoval=true) 추가",
+                "status": "completed",
+                "file": "src/main/java/com/hakno/WordPuzzle/entity/Word.java"
+              },
+              {
+                "id": 2,
+                "title": "Definition.java에 @Deprecated(since=\"2.0.0\", forRemoval=true) 추가",
+                "status": "completed",
+                "file": "src/main/java/com/hakno/WordPuzzle/entity/Definition.java"
+              },
+              {
+                "id": 3,
+                "title": "WordRepository.java에 @Deprecated(since=\"2.0.0\", forRemoval=true) 추가",
+                "status": "completed",
+                "file": "src/main/java/com/hakno/WordPuzzle/repository/WordRepository.java"
+              },
+              {
+                "id": 4,
+                "title": "DataImportService.java에 @Deprecated(since=\"2.0.0\", forRemoval=true) 추가",
+                "status": "completed",
+                "file": "src/main/java/com/hakno/WordPuzzle/service/DataImportService.java"
+              }
+            ],
+            "dependencies": [19],
+            "tags": ["backend", "refactoring", "phase-a"],
+            "relatedDocs": "docs/plans/PLAN_FEATURE_ROADMAP.md#A-5"
+          },
+          {
+            "id": 22,
+            "title": "힌트 시스템 확장",
+            "description": "HintType Enum, HintService, HintController API - 9가지 힌트 타입 지원 (초성, 예문, 어원, 발음, 유의어, 반의어, 분야, 품사, 단어유형)",
+            "status": "completed",
+            "priority": "high",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "HintType Enum 생성 (CHOSUNG, EXAMPLE, ORIGIN, PRONUNCIATION, SYNONYM, ANTONYM, CATEGORY, POS, WORD_TYPE)",
+                "status": "completed",
+                "file": "src/main/java/com/hakno/WordPuzzle/dto/HintType.java"
+              },
+              {
+                "id": 2,
+                "title": "HintService.java 생성 - 초성 추출 알고리즘 포함",
+                "status": "completed",
+                "file": "src/main/java/com/hakno/WordPuzzle/service/HintService.java"
+              },
+              {
+                "id": 3,
+                "title": "HintController API 구현 (/api/puzzle/hint, /hint/all, /hint/available, /hint/chosung, /hint/types 등)",
+                "status": "completed",
+                "file": "src/main/java/com/hakno/WordPuzzle/controller/HintController.java"
+              },
+              {
+                "id": 4,
+                "title": "HintResponse DTO 생성 (단일/다중 값, 힌트 없음 처리)",
+                "status": "completed",
+                "file": "src/main/java/com/hakno/WordPuzzle/dto/HintResponse.java"
+              },
+              {
+                "id": 5,
+                "title": "HintServiceTest 단위 테스트 (21개)",
+                "status": "completed",
+                "file": "src/test/java/com/hakno/WordPuzzle/service/HintServiceTest.java"
+              },
+              {
+                "id": 6,
+                "title": "HintControllerIntegrationTest 통합 테스트 (12개)",
+                "status": "completed",
+                "file": "src/test/java/com/hakno/WordPuzzle/integration/HintControllerIntegrationTest.java"
+              }
+            ],
+            "dependencies": [14],
+            "tags": ["backend", "api", "phase-a"],
+            "relatedDocs": "docs/plans/PLAN_FEATURE_ROADMAP.md#A-6"
+          },
+          {
+            "id": 23,
+            "title": "테마별 퍼즐 기능",
+            "description": "카테고리 목록 API, 테마별/단어유형별 퍼즐 생성",
+            "status": "completed",
+            "priority": "medium",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "GET /api/categories API 구현 (67개 전문 분야)",
+                "status": "completed",
+                "file": "src/main/java/com/hakno/WordPuzzle/controller/CategoryController.java"
+              },
+              {
+                "id": 2,
+                "title": "GET /api/puzzle/generate?category=의학 구현",
+                "status": "completed"
+              },
+              {
+                "id": 3,
+                "title": "GET /api/puzzle/generate?wordType=고유어 구현",
+                "status": "completed"
+              },
+              {
+                "id": 4,
+                "title": "ThemeSelector.tsx 컴포넌트 생성",
+                "status": "completed",
+                "file": "frontend/src/components/ThemeSelector.tsx"
+              }
+            ],
+            "dependencies": [19],
+            "tags": ["backend", "frontend", "phase-a"],
+            "relatedDocs": "docs/plans/PLAN_FEATURE_ROADMAP.md#A-7"
+          }
+        ],
+        "qualityGate": {
+          "checklist": [
+            "std_word 테이블 생성됨",
+            "std_sense, std_example, std_word_relation 테이블 생성됨",
+            "2글자 단어 최소 1,000개 임포트됨",
+            "새 엔티티로 퍼즐 생성 동작",
+            "기존 엔티티에 @Deprecated 추가됨",
+            "힌트 시스템 동작 (초성, 예문, 유의어)",
+            "카테고리별 필터 동작"
+          ],
+          "commands": [
+            "./gradlew flywayMigrate",
+            "curl -X POST http://localhost:8080/api/stdict/import/length/2",
+            "curl http://localhost:8080/api/stdict/import/progress",
+            "curl http://localhost:8080/api/stdict/stats",
+            "curl http://localhost:8080/api/puzzle/generate?wordCount=10",
+            "curl http://localhost:8080/api/puzzle/generate?category=의학&wordCount=5",
+            "./gradlew test",
+            "cd frontend && npm run test:run"
+          ]
+        }
+      },
+      {
+        "id": "B",
+        "title": "퍼즐 알고리즘 개선",
+        "status": "completed",
+        "duration": "1주",
+        "dependencies": ["A"],
+        "tasks": [
+          {
+            "id": 24,
+            "title": "PuzzleScorer 클래스 생성",
+            "description": "퍼즐 품질 평가를 위한 스코어링 시스템",
+            "status": "completed",
+            "priority": "high",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "PuzzleScorer.java 생성 (intersectionCount, density, balance, connectivity)",
+                "status": "completed",
+                "file": "src/main/java/com/hakno/WordPuzzle/service/PuzzleScorer.java"
+              },
+              {
+                "id": 2,
+                "title": "밀도 계산 로직 구현 (목표: 50% 이상)",
+                "status": "completed"
+              },
+              {
+                "id": 3,
+                "title": "균형도 계산 로직 구현 (4등분 분포 비교)",
+                "status": "completed"
+              },
+              {
+                "id": 4,
+                "title": "PuzzleScorerTest 작성",
+                "status": "completed",
+                "file": "src/test/java/com/hakno/WordPuzzle/service/PuzzleScorerTest.java"
+              }
+            ],
+            "dependencies": [],
+            "tags": ["backend", "algorithm", "phase-b"],
+            "relatedDocs": "docs/plans/PLAN_FEATURE_ROADMAP.md#B-2"
+          },
+          {
+            "id": 25,
+            "title": "백트래킹 퍼즐 생성 알고리즘",
+            "description": "그리디 방식에서 백트래킹으로 개선하여 품질 향상",
+            "status": "completed",
+            "priority": "high",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "BacktrackingPuzzleGenerator.java 생성",
+                "status": "completed",
+                "file": "src/main/java/com/hakno/WordPuzzle/service/BacktrackingPuzzleGenerator.java"
+              },
+              {
+                "id": 2,
+                "title": "GridSnapshot 클래스 구현 (상태 저장/복원)",
+                "status": "completed",
+                "file": "src/main/java/com/hakno/WordPuzzle/util/GridSnapshot.java"
+              },
+              {
+                "id": 3,
+                "title": "가지치기(Pruning) 로직 구현",
+                "status": "completed"
+              },
+              {
+                "id": 4,
+                "title": "타임아웃 설정 (기본 5초)",
+                "status": "completed"
+              },
+              {
+                "id": 5,
+                "title": "BacktrackingPuzzleGeneratorTest 작성",
+                "status": "completed",
+                "file": "src/test/java/com/hakno/WordPuzzle/service/BacktrackingPuzzleGeneratorTest.java"
+              }
+            ],
+            "dependencies": [24],
+            "tags": ["backend", "algorithm", "phase-b"],
+            "relatedDocs": "docs/plans/PLAN_FEATURE_ROADMAP.md#B-3"
+          },
+          {
+            "id": 26,
+            "title": "다중 시드 전략 및 병렬 생성",
+            "description": "여러 시작점에서 퍼즐 생성 후 최고 점수 선택",
+            "status": "completed",
+            "priority": "medium",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "CompletableFuture 활용한 병렬 퍼즐 생성",
+                "status": "completed"
+              },
+              {
+                "id": 2,
+                "title": "최적 결과 선택 로직 구현",
+                "status": "completed"
+              },
+              {
+                "id": 3,
+                "title": "타임아웃 시 Fallback 처리",
+                "status": "completed"
+              }
+            ],
+            "dependencies": [24, 25],
+            "tags": ["backend", "algorithm", "phase-b"],
+            "relatedDocs": "docs/plans/PLAN_FEATURE_ROADMAP.md#B-4"
+          },
+          {
+            "id": 27,
+            "title": "대칭 레이아웃 옵션 (선택적)",
+            "description": "전통적인 십자말풀이 스타일의 대칭 퍼즐 - 스킵됨",
+            "status": "skipped",
+            "priority": "low",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "SymmetricPuzzleGenerator.java 생성 (180도, 좌우, 상하 대칭)",
+                "status": "skipped",
+                "file": "src/main/java/com/hakno/WordPuzzle/service/SymmetricPuzzleGenerator.java"
+              },
+              {
+                "id": 2,
+                "title": "GET /api/puzzle/generate?symmetric=true API 추가",
+                "status": "skipped"
+              }
+            ],
+            "dependencies": [25],
+            "tags": ["backend", "algorithm", "phase-b"],
+            "relatedDocs": "docs/plans/PLAN_FEATURE_ROADMAP.md#B-5"
+          },
+          {
+            "id": 28,
+            "title": "성능 최적화",
+            "description": "단어 인덱싱, 캐싱으로 퍼즐 생성 속도 개선",
+            "status": "completed",
+            "priority": "medium",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "글자별 단어 맵 캐싱 구현 (WordCache.java)",
+                "status": "completed",
+                "file": "src/main/java/com/hakno/WordPuzzle/service/WordCache.java"
+              },
+              {
+                "id": 2,
+                "title": "WordCacheTest 작성",
+                "status": "completed",
+                "file": "src/test/java/com/hakno/WordPuzzle/service/WordCacheTest.java"
+              },
+              {
+                "id": 3,
+                "title": "GridSnapshotTest 작성",
+                "status": "completed",
+                "file": "src/test/java/com/hakno/WordPuzzle/util/GridSnapshotTest.java"
+              }
+            ],
+            "dependencies": [25],
+            "tags": ["backend", "optimization", "phase-b"],
+            "relatedDocs": "docs/plans/PLAN_FEATURE_ROADMAP.md#B-6"
+          }
+        ],
+        "qualityGate": {
+          "checklist": [
+            "단어 밀도 50% 이상 달성",
+            "퍼즐 생성 시간 5초 이내",
+            "백트래킹으로 품질 향상 확인",
+            "스코어 API 응답에 포함"
+          ],
+          "commands": [
+            "./gradlew test --tests *PuzzleScorerTest",
+            "./gradlew test --tests *BacktrackingTest",
+            "curl -w @curl-format.txt http://localhost:8080/api/puzzle/generate?wordCount=15"
+          ]
+        }
+      },
+      {
+        "id": "C",
+        "title": "TDD 리팩토링 완료",
+        "status": "pending",
+        "duration": "3-4일",
+        "dependencies": ["A", "B"],
+        "tasks": [
+          {
+            "id": 29,
+            "title": "Frontend 커스텀 훅 추출 및 테스트",
+            "description": "기존 Phase 5: usePuzzleNavigation, usePuzzleInput 훅 분리",
+            "status": "pending",
+            "priority": "high",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "usePuzzleNavigation 훅 추출 (셀 선택, 키보드 네비게이션)",
+                "status": "pending",
+                "file": "frontend/src/hooks/usePuzzleNavigation.ts"
+              },
+              {
+                "id": 2,
+                "title": "usePuzzleInput 훅 추출 (입력 처리, IME 핸들링)",
+                "status": "pending",
+                "file": "frontend/src/hooks/usePuzzleInput.ts"
+              },
+              {
+                "id": 3,
+                "title": "PuzzleGrid 리팩토링 (추출된 훅 사용)",
+                "status": "pending",
+                "file": "frontend/src/components/PuzzleGrid.tsx"
+              },
+              {
+                "id": 4,
+                "title": "usePuzzleNavigation.test.ts 확장 (셀 클릭, 화살표 키, Space/Tab)",
+                "status": "pending",
+                "file": "frontend/src/__tests__/hooks/usePuzzleNavigation.test.ts"
+              },
+              {
+                "id": 5,
+                "title": "usePuzzleInput.test.ts 작성 (한글 입력, IME, Backspace)",
+                "status": "pending",
+                "file": "frontend/src/__tests__/hooks/usePuzzleInput.test.ts"
+              }
+            ],
+            "dependencies": [],
+            "tags": ["frontend", "refactoring", "phase-c"],
+            "relatedDocs": "docs/plans/PLAN_FEATURE_ROADMAP.md#C-1"
+          },
+          {
+            "id": 30,
+            "title": "E2E 테스트 보강",
+            "description": "기존 Phase 6: 퍼즐 생성/풀이/힌트 시스템 E2E 테스트",
+            "status": "pending",
+            "priority": "medium",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "puzzle-generation.spec.ts 작성 (기본/테마별/단어유형별)",
+                "status": "pending",
+                "file": "tests/puzzle-generation.spec.ts"
+              },
+              {
+                "id": 2,
+                "title": "puzzle-solving.spec.ts 작성 (입력/힌트/완료 감지)",
+                "status": "pending",
+                "file": "tests/puzzle-solving.spec.ts"
+              },
+              {
+                "id": 3,
+                "title": "hint-system.spec.ts 작성 (힌트 타입 전환/어원/한자)",
+                "status": "pending",
+                "file": "tests/hint-system.spec.ts"
+              },
+              {
+                "id": 4,
+                "title": "Page Object 패턴 적용 (PuzzlePage.ts)",
+                "status": "pending",
+                "file": "tests/pages/PuzzlePage.ts"
+              }
+            ],
+            "dependencies": [23],
+            "tags": ["e2e", "testing", "phase-c"],
+            "relatedDocs": "docs/plans/PLAN_FEATURE_ROADMAP.md#C-2"
+          }
+        ],
+        "qualityGate": {
+          "checklist": [
+            "Frontend 커버리지 80% 이상",
+            "훅 테스트 모두 통과",
+            "컴포넌트 테스트 모두 통과",
+            "E2E 테스트 모두 통과"
+          ],
+          "commands": [
+            "cd frontend && npm run test:coverage",
+            "npx playwright test",
+            "./gradlew test jacocoTestReport"
+          ]
+        }
+      },
+      {
+        "id": "D",
+        "title": "새 기능 개발",
+        "status": "pending",
+        "duration": "1-2주",
+        "dependencies": ["A", "B", "C"],
+        "tasks": [
+          {
+            "id": 31,
+            "title": "타이머 및 점수 시스템 - 백엔드",
+            "description": "GameSession 엔티티, 게임 세션 API, 점수 계산",
+            "status": "pending",
+            "priority": "high",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "GameSession 엔티티 생성 (sessionId, puzzleId, startTime, score, hintsUsed)",
+                "status": "pending",
+                "file": "src/main/java/com/hakno/WordPuzzle/entity/GameSession.java"
+              },
+              {
+                "id": 2,
+                "title": "POST /api/game/start API 구현",
+                "status": "pending",
+                "file": "src/main/java/com/hakno/WordPuzzle/controller/GameController.java"
+              },
+              {
+                "id": 3,
+                "title": "POST /api/game/{sessionId}/hint API 구현",
+                "status": "pending"
+              },
+              {
+                "id": 4,
+                "title": "POST /api/game/{sessionId}/complete API 구현",
+                "status": "pending"
+              },
+              {
+                "id": 5,
+                "title": "ScoreCalculator.java 생성",
+                "status": "pending",
+                "file": "src/main/java/com/hakno/WordPuzzle/service/ScoreCalculator.java"
+              },
+              {
+                "id": 6,
+                "title": "GameSessionTest 작성",
+                "status": "pending",
+                "file": "src/test/java/com/hakno/WordPuzzle/service/GameSessionTest.java"
+              }
+            ],
+            "dependencies": [],
+            "tags": ["backend", "feature", "phase-d"],
+            "relatedDocs": "docs/plans/PLAN_FEATURE_ROADMAP.md#D-1"
+          },
+          {
+            "id": 32,
+            "title": "타이머 및 점수 시스템 - 프론트엔드",
+            "description": "Timer, ScoreBoard, CompletionModal 컴포넌트",
+            "status": "pending",
+            "priority": "high",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "Timer 컴포넌트 생성 (경과 시간 표시)",
+                "status": "pending",
+                "file": "frontend/src/components/Timer.tsx"
+              },
+              {
+                "id": 2,
+                "title": "ScoreBoard 컴포넌트 생성 (현재 점수, 힌트 횟수)",
+                "status": "pending",
+                "file": "frontend/src/components/ScoreBoard.tsx"
+              },
+              {
+                "id": 3,
+                "title": "CompletionModal 컴포넌트 생성 (최종 점수, 다시하기)",
+                "status": "pending",
+                "file": "frontend/src/components/CompletionModal.tsx"
+              },
+              {
+                "id": 4,
+                "title": "게임 세션 API 연동",
+                "status": "pending"
+              }
+            ],
+            "dependencies": [31],
+            "tags": ["frontend", "feature", "phase-d"],
+            "relatedDocs": "docs/plans/PLAN_FEATURE_ROADMAP.md#D-1"
+          },
+          {
+            "id": 33,
+            "title": "일일 퍼즐 시스템",
+            "description": "매일 자정 새 퍼즐 생성, 날짜 기반 시드",
+            "status": "pending",
+            "priority": "medium",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "DailyPuzzle 엔티티 생성 (date, puzzleSeed, puzzleData JSON)",
+                "status": "pending",
+                "file": "src/main/java/com/hakno/WordPuzzle/entity/DailyPuzzle.java"
+              },
+              {
+                "id": 2,
+                "title": "DailyPuzzleScheduler 생성 (@Scheduled 매일 자정)",
+                "status": "pending",
+                "file": "src/main/java/com/hakno/WordPuzzle/scheduler/DailyPuzzleScheduler.java"
+              },
+              {
+                "id": 3,
+                "title": "GET /api/puzzle/daily API 구현",
+                "status": "pending"
+              },
+              {
+                "id": 4,
+                "title": "DailyPuzzle 컴포넌트 생성",
+                "status": "pending",
+                "file": "frontend/src/components/DailyPuzzle.tsx"
+              },
+              {
+                "id": 5,
+                "title": "DailyPuzzleTest 작성",
+                "status": "pending",
+                "file": "src/test/java/com/hakno/WordPuzzle/service/DailyPuzzleTest.java"
+              }
+            ],
+            "dependencies": [25],
+            "tags": ["backend", "frontend", "feature", "phase-d"],
+            "relatedDocs": "docs/plans/PLAN_FEATURE_ROADMAP.md#D-2"
+          },
+          {
+            "id": 34,
+            "title": "저장 및 불러오기 기능",
+            "description": "게임 상태 저장/불러오기 (서버 + LocalStorage)",
+            "status": "pending",
+            "priority": "medium",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "POST /api/game/{sessionId}/save API 구현",
+                "status": "pending"
+              },
+              {
+                "id": 2,
+                "title": "GET /api/game/{sessionId} API 구현",
+                "status": "pending"
+              },
+              {
+                "id": 3,
+                "title": "gameStorage.ts 유틸 생성",
+                "status": "pending",
+                "file": "frontend/src/utils/gameStorage.ts"
+              },
+              {
+                "id": 4,
+                "title": "SavedGames 컴포넌트 생성",
+                "status": "pending",
+                "file": "frontend/src/components/SavedGames.tsx"
+              }
+            ],
+            "dependencies": [31],
+            "tags": ["backend", "frontend", "feature", "phase-d"],
+            "relatedDocs": "docs/plans/PLAN_FEATURE_ROADMAP.md#D-3"
+          },
+          {
+            "id": 35,
+            "title": "리더보드 시스템 (선택적)",
+            "description": "점수 랭킹 시스템",
+            "status": "pending",
+            "priority": "low",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "Leaderboard 엔티티 생성",
+                "status": "pending",
+                "file": "src/main/java/com/hakno/WordPuzzle/entity/Leaderboard.java"
+              },
+              {
+                "id": 2,
+                "title": "GET /api/leaderboard API 구현",
+                "status": "pending"
+              },
+              {
+                "id": 3,
+                "title": "Leaderboard 컴포넌트 생성",
+                "status": "pending",
+                "file": "frontend/src/components/Leaderboard.tsx"
+              }
+            ],
+            "dependencies": [31],
+            "tags": ["backend", "frontend", "feature", "phase-d"],
+            "relatedDocs": "docs/plans/PLAN_FEATURE_ROADMAP.md#D-4"
+          },
+          {
+            "id": 36,
+            "title": "모바일 최적화 및 PWA",
+            "description": "반응형 레이아웃, 터치 입력, 오프라인 지원",
+            "status": "pending",
+            "priority": "medium",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "반응형 레이아웃 구현 (mobile <768px, tablet, desktop)",
+                "status": "pending"
+              },
+              {
+                "id": 2,
+                "title": "터치 입력 개선 (터치 이벤트, 가상 키보드)",
+                "status": "pending"
+              },
+              {
+                "id": 3,
+                "title": "PWA 설정 (manifest.json, service-worker.js)",
+                "status": "pending"
+              },
+              {
+                "id": 4,
+                "title": "모바일 E2E 테스트",
+                "status": "pending"
+              }
+            ],
+            "dependencies": [],
+            "tags": ["frontend", "optimization", "phase-d"],
+            "relatedDocs": "docs/plans/PLAN_FEATURE_ROADMAP.md#D-5"
+          }
+        ],
+        "qualityGate": {
+          "checklist": [
+            "타이머 및 점수 시스템 동작",
+            "일일 퍼즐 자동 생성",
+            "게임 저장/불러오기 동작",
+            "모바일 UI 정상 표시"
+          ],
+          "commands": [
+            "./gradlew test --tests *GameSessionTest",
+            "./gradlew test --tests *DailyPuzzleTest",
+            "npx playwright test tests/game-features.spec.ts",
+            "npx playwright test --project=mobile"
+          ]
+        }
+      },
+      {
+        "id": "E",
+        "title": "레거시 정리",
+        "status": "pending",
+        "duration": "2-3일",
+        "dependencies": ["A", "B", "C", "D"],
+        "tasks": [
+          {
+            "id": 37,
+            "title": "레거시 코드 제거",
+            "description": "기존 한국어기초사전 관련 코드 완전 제거",
+            "status": "pending",
+            "priority": "medium",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "Word 엔티티 삭제",
+                "status": "pending",
+                "file": "src/main/java/com/hakno/WordPuzzle/entity/Word.java"
+              },
+              {
+                "id": 2,
+                "title": "Definition 엔티티 삭제",
+                "status": "pending",
+                "file": "src/main/java/com/hakno/WordPuzzle/entity/Definition.java"
+              },
+              {
+                "id": 3,
+                "title": "WordRepository 삭제",
+                "status": "pending",
+                "file": "src/main/java/com/hakno/WordPuzzle/repository/WordRepository.java"
+              },
+              {
+                "id": 4,
+                "title": "DataImportService 삭제",
+                "status": "pending",
+                "file": "src/main/java/com/hakno/WordPuzzle/service/DataImportService.java"
+              },
+              {
+                "id": 5,
+                "title": "기존 PuzzleGeneratorService 삭제",
+                "status": "pending"
+              }
+            ],
+            "dependencies": [],
+            "tags": ["backend", "cleanup", "phase-e"],
+            "relatedDocs": "docs/plans/PLAN_FEATURE_ROADMAP.md#E-1"
+          },
+          {
+            "id": 38,
+            "title": "데이터베이스 정리",
+            "description": "기존 테이블 삭제 및 /data 폴더 정리",
+            "status": "pending",
+            "priority": "medium",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "V3__drop_legacy_tables.sql 작성 (DROP TABLE definition, word)",
+                "status": "pending",
+                "file": "src/main/resources/db/migration/V3__drop_legacy_tables.sql"
+              },
+              {
+                "id": 2,
+                "title": "/data 폴더 JSON 파일 삭제",
+                "status": "pending"
+              }
+            ],
+            "dependencies": [37],
+            "tags": ["database", "cleanup", "phase-e"],
+            "relatedDocs": "docs/plans/PLAN_FEATURE_ROADMAP.md#E-2"
+          },
+          {
+            "id": 39,
+            "title": "문서 업데이트",
+            "description": "README, CLAUDE.md, 저작권 표시 업데이트",
+            "status": "pending",
+            "priority": "low",
+            "subtasks": [
+              {
+                "id": 1,
+                "title": "README.md 업데이트 (데이터 소스 변경)",
+                "status": "pending"
+              },
+              {
+                "id": 2,
+                "title": "CLAUDE.md 업데이트 (새 엔티티 구조, API 정보)",
+                "status": "pending"
+              },
+              {
+                "id": 3,
+                "title": "저작권 표시 업데이트 (국립국어원 표준국어대사전)",
+                "status": "pending"
+              }
+            ],
+            "dependencies": [38],
+            "tags": ["documentation", "phase-e"],
+            "relatedDocs": "docs/plans/PLAN_FEATURE_ROADMAP.md#E-3"
+          }
+        ],
+        "qualityGate": {
+          "checklist": [
+            "기존 엔티티 참조하는 코드 없음",
+            "모든 테스트 통과",
+            "퍼즐 생성 정상 동작",
+            "문서 업데이트 완료"
+          ],
+          "commands": [
+            "./gradlew test",
+            "cd frontend && npm run test:run",
+            "npx playwright test"
+          ]
+        }
+      }
+    ],
+    "overallProgress": {
+      "currentPhase": "C",
+      "completedPhases": ["A", "B"],
+      "totalTasks": 32,
+      "completedTasks": 20,
+      "percentComplete": 63,
+      "phaseAProgress": "16/16 tasks completed (100%)",
+      "phaseBProgress": "4/5 tasks completed (1 skipped)"
+    },
+    "successCriteria": [
+      "표준국어대사전 데이터 10만 단어 이상 임포트",
+      "새 엔티티로 퍼즐 생성 정상 동작",
+      "기존 Word 엔티티 deprecated 처리",
+      "퍼즐 단어 밀도 50% 이상 달성",
+      "전체 테스트 커버리지 90% 이상"
+    ]
+  },
   "metadata": {
     "projectName": "WordPuzzle",
     "createdAt": "2026-01-02",
-    "updatedAt": "2026-01-06",
-    "version": "1.2.0",
+    "updatedAt": "2026-01-12",
+    "version": "3.0.0",
     "coverageBaseline": {
       "backend": {
         "total": "29.0%",
@@ -201,44 +1241,28 @@
           "util": "98%",
           "service": "95%",
           "dto": "100%"
-        },
-        "serviceDetails": {
-          "WordService": "100%",
-          "DataImportService": "97%",
-          "PlacementValidator": "100%",
-          "PuzzleGeneratorService": "91%"
         }
       },
       "frontend": {
-        "total": "95.56%",
-        "totalBranch": "89.74%",
-        "totalFunctions": "96.22%",
-        "testCount": 110,
-        "files": {
-          "PuzzleGrid.tsx": "93.39%",
-          "HintPanel.tsx": "90%",
-          "usePuzzleNavigation.ts": "100%",
-          "chosung.ts": "92.85%",
-          "puzzleUtils.ts": "97.87%"
-        }
+        "total": "96.37%",
+        "totalBranch": "90.76%",
+        "totalFunctions": "100%",
+        "testCount": 122
       }
     },
     "testSummary": {
-      "frontend": {
-        "total": 110,
-        "files": 6
-      },
-      "backend": {
-        "serviceTests": {
-          "WordServiceTest": 11,
-          "DataImportServiceTest": 16,
-          "PlacementValidatorTest": 34
-        }
-      },
-      "e2e": {
-        "total": 152,
-        "browsers": 4
-      }
+      "frontend": { "total": 122, "files": 6 },
+      "backend": { "total": 203 },
+      "e2e": { "total": 43, "browsers": 4 },
+      "grandTotal": 368
+    },
+    "timeline": {
+      "phaseA": "1.5주",
+      "phaseB": "1주",
+      "phaseC": "3-4일",
+      "phaseD": "1-2주",
+      "phaseE": "2-3일",
+      "total": "4-5주"
     }
   }
 }

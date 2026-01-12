@@ -19,6 +19,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+/**
+ * @deprecated 한국어기초사전 JSON 파일 기반 레거시 임포트 서비스.
+ * 표준국어대사전 API 기반의 {@link StdictImportService}를 사용하세요.
+ * Phase E에서 완전히 제거될 예정입니다.
+ */
+@Deprecated(since = "2.0.0", forRemoval = true)
 @Service
 @RequiredArgsConstructor
 @Slf4j

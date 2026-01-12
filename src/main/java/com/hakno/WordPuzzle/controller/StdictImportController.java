@@ -1,5 +1,9 @@
 package com.hakno.WordPuzzle.controller;
 
+/*
+ * 표준국어대사전 API 임포트 기능 비활성화
+ * API 사용 재개 시 주석 해제
+
 import com.hakno.WordPuzzle.client.StdictApiClient;
 import com.hakno.WordPuzzle.dto.ImportProgress;
 import com.hakno.WordPuzzle.service.StdictImportService;
@@ -19,9 +23,6 @@ public class StdictImportController {
     private final StdictImportService importService;
     private final StdictApiClient apiClient;
 
-    /**
-     * API 연결 테스트
-     */
     @GetMapping("/test")
     public ResponseEntity<Map<String, Object>> testConnection() {
         boolean connected = apiClient.testConnection();
@@ -31,9 +32,6 @@ public class StdictImportController {
         ));
     }
 
-    /**
-     * 특정 글자 수 단어 임포트 시작 (비동기)
-     */
     @PostMapping("/import/length/{length}")
     public ResponseEntity<Map<String, Object>> importByLength(@PathVariable int length) {
         if (length < 2 || length > 8) {
@@ -57,9 +55,6 @@ public class StdictImportController {
         ));
     }
 
-    /**
-     * 전체 임포트 시작 (2~8글자, 비동기)
-     */
     @PostMapping("/import/start")
     public ResponseEntity<Map<String, Object>> startFullImport(
             @RequestParam(defaultValue = "2") int startLength,
@@ -73,7 +68,6 @@ public class StdictImportController {
             ));
         }
 
-        // 첫 번째 길이부터 시작 (나머지는 순차적으로)
         importService.importByLength(startLength);
 
         return ResponseEntity.ok(Map.of(
@@ -83,17 +77,11 @@ public class StdictImportController {
         ));
     }
 
-    /**
-     * 임포트 진행 상황 조회
-     */
     @GetMapping("/import/progress")
     public ResponseEntity<ImportProgress> getProgress() {
         return ResponseEntity.ok(importService.getProgress());
     }
 
-    /**
-     * 임포트 중단
-     */
     @PostMapping("/import/stop")
     public ResponseEntity<Map<String, Object>> stopImport() {
         importService.stopImport();
@@ -103,17 +91,11 @@ public class StdictImportController {
         ));
     }
 
-    /**
-     * 임포트된 데이터 통계 조회
-     */
     @GetMapping("/stats")
     public ResponseEntity<StdictImportService.ImportStats> getStats() {
         return ResponseEntity.ok(importService.getStats());
     }
 
-    /**
-     * 샘플 검색 테스트
-     */
     @GetMapping("/search")
     public ResponseEntity<?> search(
             @RequestParam String q,
@@ -128,9 +110,6 @@ public class StdictImportController {
         }
     }
 
-    /**
-     * 단어 상세 조회 테스트
-     */
     @GetMapping("/view/{targetCode}")
     public ResponseEntity<?> view(@PathVariable String targetCode) {
         try {
@@ -142,3 +121,4 @@ public class StdictImportController {
         }
     }
 }
+*/
